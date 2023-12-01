@@ -5,10 +5,11 @@ module Async
 	module WebDriver
 		module Browser
 			class Firefox < Generic
-				def initialize(path: "geckodriver")
+				def initialize(path: "geckodriver", headless: true)
 					super()
 					
 					@path = path
+					@headless = headless
 				end
 				
 				def version
@@ -44,6 +45,9 @@ module Async
 					{
 						alwaysMatch: {
 							browserName: "firefox",
+							"moz:firefoxOptions": {
+								"args": [@headless ? "-headless" : nil].compact,
+							}
 						}
 					}
 				end
