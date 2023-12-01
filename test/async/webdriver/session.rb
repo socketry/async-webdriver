@@ -34,11 +34,6 @@ ASession = Sus::Shared("a session") do
 		expect(session.implicit_wait_timeout).to be == 1000
 		expect(session.page_load_timeout).to be == 1000
 	end
-	
-	# it "should be able to navigate to a page" do
-	# 	session.navigate("https://google.com")
-	# 	expect(session.title).to be == "Google"
-	# end
 end
 
 Async::WebDriver::Browser.each do |klass|
