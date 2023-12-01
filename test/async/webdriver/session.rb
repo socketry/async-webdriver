@@ -19,12 +19,11 @@ ASession = Sus::Shared("a session") do
 		session.visit(bound_url)
 	end
 	
-	# it "should have timeouts" do
-	# 	expect(session.timeouts).to be_a(Hash)
-	# 	expect(session.script_timeout).to be_a(Integer)
-	# 	expect(session.implicit_wait_timeout).to be_a(Integer)
-	# 	expect(session.page_load_timeout).to be_a(Integer)
-	# end
+	it "should have timeouts" do
+		expect(session.script_timeout).to be_a(Integer)
+		expect(session.implicit_wait_timeout).to be_a(Integer)
+		expect(session.page_load_timeout).to be_a(Integer)
+	end
 	
 	# it "should be able to set timeouts" do
 	# 	session.script_timeout = 1000

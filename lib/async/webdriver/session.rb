@@ -39,7 +39,7 @@ module Async
 			end
 			
 			private def timeouts
-				get("timeouts")["timeouts"]
+				get("timeouts")
 			end
 			
 			# The script timeout is the amount of time the driver should wait when executing JavaScript asynchronously.
