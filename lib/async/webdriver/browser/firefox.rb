@@ -3,16 +3,22 @@ require_relative 'generic'
 module Async
 	module WebDriver
 		module Browser
-			class Firefox
-				def initialize(path: "geckodriver", headless: true)
+			class Firefox < Generic
+				def initialize(path: "geckodriver")
 					@path = path
-					@headless = headless
+				end
+				
+				def version
+					::IO.popen([@path, "--version"]) do |io|
+						return io.read
+					end
+				rescue Errno::ENOENT
+					return nil
 				end
 				
 				def arguments
 					[
-						"--port=#{self.port}",
-						@headless ? "--headless" : nil,
+						"--port", self.port.to_s,
 					].compact
 				end
 				

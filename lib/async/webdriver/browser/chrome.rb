@@ -9,6 +9,14 @@ module Async
 					@headless = headless
 				end
 				
+				def version
+					::IO.popen([@path, "--version"]) do |io|
+						return io.read
+					end
+				rescue Errno::ENOENT
+					return nil
+				end
+				
 				def arguments
 					[
 						"--port=#{self.port}",

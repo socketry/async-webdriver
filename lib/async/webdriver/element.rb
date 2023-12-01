@@ -22,12 +22,10 @@ module Async
 				return reply["value"]
 			end
 			
-			
-			
 			private
 			
 			def post(path, request)
-				response = @client.post("/session/#{@session_id}/element/#{@element_id}/#{path}", [], JSON.dump(request))
+				response = @client.post("/session/#{@session_id}/element/#{@element_id}/#{path}", [], request ? JSON.dump(request) : nil)
 				reply = JSON.parse(response.read)
 				
 				return reply

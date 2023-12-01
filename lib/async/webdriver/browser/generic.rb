@@ -1,11 +1,25 @@
+require 'socket'
+require 'async/http/endpoint'
+require 'async/http/client'
+
+require_relative '../session'
+
 module Async
 	module WebDriver
 		module Browser
 			# Generic W3C WebDriver implementation.
 			class Generic
-				def initialize
-					@socket = nil
+				def initialize(port: nil)
+					@port = port
 					@client = nil
+				end
+				
+				def version
+					nil
+				end
+				
+				def supported?
+					version != nil
 				end
 				
 				# Start the driver.
@@ -14,11 +28,6 @@ module Async
 				
 				# Close the driver and any associated resources.
 				def close
-					if @socket
-						@socket.close
-						@socket = nil
-					end
-					
 					if @client
 						@client.close
 						@client = nil
@@ -27,12 +36,15 @@ module Async
 				
 				# @returns [Integer] The port the driver is listening on.
 				def port
-					unless @socket
-						address = Addrinfo.tcp("localhost", 0)
-						@socket = address.bind
+					unless @port
+						address = ::Addrinfo.tcp("localhost", 0)
+						address.bind do |socket|
+							# We assume that it's unlikely the port will be reused any time soon...
+							@port = socket.local_address.ip_port
+						end
 					end
 					
-					return @socket.local_address.ip_port
+					return @port
 				end
 				
 				# @returns [Async::HTTP::Endpoint] The endpoint the driver is listening on.
@@ -44,7 +56,16 @@ module Async
 				def make_client
 					start
 					
-					Async::HTTP::Client.new(endpoint)
+					Async::HTTP::Client.new(endpoint).tap do |client|
+						begin
+							Console.debug("Waiting for driver to start...")
+							response = client.get("/status")
+							status = JSON.parse(response.read)
+							Console.debug(client, status: status)
+						rescue Errno::ECONNREFUSED
+							retry
+						end
+					end
 				end
 				
 				# @returns [Async::HTTP::Client] The client to use to communicate with the driver.
