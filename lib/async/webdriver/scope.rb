@@ -4,7 +4,7 @@ module Async
 			def element(using, value)
 				reply = post("element", {using: using, value: value})
 				
-				return Element.new(self, JSON.parse(body)["element-6066-11e4-a52e-4f735466cecf"])
+				return Element.new(self.session, JSON.parse(body)["element-6066-11e4-a52e-4f735466cecf"])
 			end
 			
 			def element_by_css(css)

@@ -1,26 +1,35 @@
 require_relative 'scope'
+require_relative 'client_wrapper'
 
 module Async
 	module WebDriver
 		class Session
-			def initialize(client, session_id)
+			include ClientWrapper
+			include Scope
+			
+			def initialize(client, id)
 				@client = client
-				@session_id = session_id
+				@id = id
+			end
+			
+			attr :client
+			attr :id
+			
+			def session
+				self
+			end
+			
+			def full_path(path)
+				"/session/#{@id}/#{path}"
 			end
 			
 			def close
 				if @client
-					@client.delete("/session/#{@session_id}")
+					@client.delete("/session/#{@id}")
 					@client = nil
 				end
 				
-				@session_id = nil
-			end
-			
-			def capabilities
-				reply = get("capabilities")
-				
-				return reply["value"]
+				@id = nil
 			end
 			
 			def title
@@ -30,44 +39,50 @@ module Async
 			end
 			
 			private def timeouts
-				reply = get("timeouts")
-				
-				return reply["timeouts"]
+				get("timeouts")["timeouts"]
 			end
 			
+			# The script timeout is the amount of time the driver should wait when executing JavaScript asynchronously.
+			# @returns [Integer] The timeout in milliseconds.
 			def script_timeout
 				timeouts["script"]
 			end
 			
+			# @parameter value [Integer] The timeout in milliseconds.
 			def script_timeout=(value)
 				post("timeouts", {type: "script", ms: value})
 			end
 			
+			# The implicit wait timeout is the amount of time the driver should wait when searching for elements.
+			# @returns [Integer] The timeout in milliseconds.
 			def implicit_wait_timeout
 				timeouts["implicit"]
 			end
 			
+			# @parameter value [Integer] The timeout in milliseconds.
 			def implicit_wait_timeout=(value)
 				post("timeouts", {type: "implicit", ms: value})
 			end
 			
+			# The page load timeout is the amount of time the driver should wait when loading a page.
+			# @returns [Integer] The timeout in milliseconds.
 			def page_load_timeout
 				timeouts["pageLoad"]
 			end
 			
+			# @parameter value [Integer] The timeout in milliseconds.
 			def page_load_timeout=(value)
 				post("timeouts", {type: "page load", ms: value})
 			end
 			
+			# Navigates to the given URL.
+			# @parameter url [String] The URL to navigate to.
 			def visit(url)
-				response = @client.post("/session/#{@session_id}/url", [], JSON.dump({url: url}))
-				Console.info(client, response: response.read)
+				post("url", {url: url})
 			end
 			
 			def current_url
-				reply = get("url")
-				
-				return reply["value"]
+				get("url")
 			end
 			
 			def back
@@ -79,33 +94,11 @@ module Async
 			end
 			
 			def source
-				reply = get("source")
-				
-				return reply["value"]
+				get("source")
 			end
 			
 			def execute(script, *arguments)
-				reply = post("execute", {script: script, args: arguments})
-				
-				return reply["value"]
-			end
-			
-			include Scope
-			
-			private
-			
-			def get(path)
-				response = @client.get("/session/#{@session_id}/#{path}")
-				reply = JSON.parse(response.read)
-				
-				return reply
-			end
-			
-			def post(path, request = nil)
-				response = @client.post("/session/#{@session_id}/#{path}", [], request ? JSON.dump(request) : nil)
-				reply = JSON.parse(response.read)
-				
-				return reply
+				post("execute", {script: script, args: arguments})
 			end
 		end
 	end

@@ -1,25 +1,23 @@
 
 require 'sus/fixtures/async/reactor_context'
+require 'sus/fixtures/async/http/server_context'
 
 require 'async/webdriver/session'
 require 'async/webdriver/browser'
 
 ASession = Sus::Shared("a session") do
 	include Sus::Fixtures::Async::ReactorContext
+	include Sus::Fixtures::Async::HTTP::ServerContext
 	
-	let(:session) {@browser.session}
+	let(:session) {browser.session}
 	
 	it "should have a session" do
 		expect(session).to be_a(Async::WebDriver::Session)
 	end
 	
-	it "should have a title" do
-		expect(session.title).to be_a(String)
+	it "can visit url" do
+		session.visit(bound_url)
 	end
-	
-	# it "should have capabilities" do
-	# 	expect(session.capabilities).to be_a(Hash)
-	# end
 	
 	# it "should have timeouts" do
 	# 	expect(session.timeouts).to be_a(Hash)
@@ -44,20 +42,18 @@ ASession = Sus::Shared("a session") do
 	# end
 end
 
-Async::WebDriver::Browser.constants.each do |name|
-	klass = Async::WebDriver::Browser.const_get(name)
-	next unless klass.new.supported?
+Async::WebDriver::Browser.each do |klass|
+	name = klass.name.split("::").last
 	
 	describe(klass, unique: name) do
-		def before
-			@browser = subject.new
+		def browser
+			@browser ||= subject.new
 		end
 		
 		def after
 			@browser&.close
+			super
 		end
-		
-		attr :browser
 		
 		it_behaves_like ASession
 	end

@@ -1,14 +1,25 @@
 require_relative 'scope'
+require_relative 'client_wrapper'
 
 module Async
 	module WebDriver
 		class Element
-			def initialize(client, element_id)
-				@client = client
-				@element_id = element_id
+			include Scope
+			include ClientWrapper
+			
+			def initialize(session, id)
+				@session = session
+				@client = session.client
+				@id = id
 			end
 			
-			include Scope
+			attr :session
+			attr :client
+			attr :id
+			
+			def full_path(path)
+				"/session/#{@session.id}/element/#{@id}/#{path}"
+			end
 			
 			def selected?
 				reply = get("selected")
@@ -20,22 +31,6 @@ module Async
 				reply = get("enabled")
 				
 				return reply["value"]
-			end
-			
-			private
-			
-			def post(path, request)
-				response = @client.post("/session/#{@session_id}/element/#{@element_id}/#{path}", [], request ? JSON.dump(request) : nil)
-				reply = JSON.parse(response.read)
-				
-				return reply
-			end
-			
-			def get(path)
-				response = @client.get("/session/#{@session_id}/element/#{@element_id}/#{path}")
-				reply = JSON.parse(response.read)
-				
-				return reply
 			end
 		end
 	end

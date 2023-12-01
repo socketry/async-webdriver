@@ -2,6 +2,7 @@ require 'socket'
 require 'async/http/endpoint'
 require 'async/http/client'
 
+require_relative '../client_wrapper'
 require_relative '../session'
 
 module Async
@@ -13,6 +14,8 @@ module Async
 					@port = port
 					@client = nil
 				end
+				
+				include ClientWrapper
 				
 				def version
 					nil
@@ -52,6 +55,10 @@ module Async
 					Async::HTTP::Endpoint.parse("http://localhost:#{port}")
 				end
 				
+				def status
+					get("status")
+				end
+				
 				# @returns [Async::HTTP::Client] The client to use to communicate with the driver.
 				def make_client
 					start
@@ -59,8 +66,8 @@ module Async
 					Async::HTTP::Client.new(endpoint).tap do |client|
 						begin
 							Console.debug("Waiting for driver to start...")
-							response = client.get("/status")
-							status = JSON.parse(response.read)
+							status = client.get("/status")
+							status = JSON.parse(status.read)
 							Console.debug(client, status: status)
 						rescue Errno::ECONNREFUSED
 							retry
@@ -75,18 +82,28 @@ module Async
 				
 				# @parameter id [String] The session ID.
 				# @returns [Async::WebDriver::Session] A new session with the given ID.
-				def make_session(id)
+				def make_session(id, capabilities)
 					Session.new(client, id)
+				end
+				
+				def desired_capabilities
+					{}
+				end
+				
+				def extract_session_id(reply)
+					reply["value"]["sessionId"]
+				end
+				
+				def extract_capabilities(reply)
+					reply["value"]["capabilities"]
 				end
 				
 				# Requests a new session from the driver.
 				# @returns [Async::WebDriver::Session] A new session.
-				def session
-					response = client.post("/session", [], JSON.dump({desiredCapabilities: {browserName: "chrome"}}))
-					
-					message = JSON.parse(response.read)
-					
-					return make_session(message["sessionId"])
+				def session(desired_capabilities = self.desired_capabilities)
+					post("session", {capabilities: desired_capabilities}) do |reply|
+						make_session(extract_session_id(reply), extract_capabilities(reply))
+					end
 				end
 			end
 		end

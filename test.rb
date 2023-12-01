@@ -1,15 +1,14 @@
 #!/usr/bin/env ruby
 
-require 'async'
-require 'async/http'
+require 'async/http/server'
+require_relative 'lib/async/webdriver'
 
 APPLICATION_PORT = 9090
-WEB_DRIVER_PORT = 4040
 
 Async do
 	browser = Async::WebDriver::Browser::Chrome.new
 	
-	Console.info("Starting driver process...", web_driver_port:)
+	Console.info("Starting driver process...")
 	browser.start
 	
 	application_endpoint = Async::HTTP::Endpoint.parse("http://localhost:#{APPLICATION_PORT}")
@@ -23,33 +22,13 @@ Async do
 		server.run
 	end
 	
-	browser.
-	
-	endpoint = Async::HTTP::Endpoint.parse("http://localhost:#{web_driver_port}")
-	client = Async::HTTP::Client.new(endpoint)
-	
-	begin
-		Console.info("Waiting for driver to start...")
-		response = client.get("/status")
-		status = JSON.parse(response.read)
-		Console.info(client, status: status)
-	rescue Errno::ECONNREFUSED
-		retry
-	end
-	
-	Console.info("Creating session...")
-	response = client.post("/session", [], JSON.dump({desiredCapabilities: {browserName: "chrome"}}))
-	session = JSON.parse(response.read)
+	session = browser.session
 	
 	Console.info("Visiting application...")
-	response = client.post("/session/#{session['sessionId']}/url", [], JSON.dump({url: "http://localhost:#{APPLICATION_PORT}"}))
-	Console.info(client, response: response.read)
-	
-	Console.info("Fetching body element...")
-	response = client.post("/session/#{session['sessionId']}/element", [], JSON.dump({using: "tag name", value: "body"}))
-	body = response.read
+	reply = session.visit("http://localhost:#{APPLICATION_PORT}")
+	Console.info("Reply", reply)
 	
 	binding.irb
 ensure
-	browser.close
+	browser&.close
 end

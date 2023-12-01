@@ -1,10 +1,13 @@
 require_relative 'generic'
+require_relative 'process_group'
 
 module Async
 	module WebDriver
 		module Browser
 			class Firefox < Generic
 				def initialize(path: "geckodriver")
+					super()
+					
 					@path = path
 				end
 				
@@ -23,7 +26,7 @@ module Async
 				end
 				
 				def start
-					@pid ||= ::Process.spawn(@path, *arguments)
+					@process ||= ProcessGroup.spawn(@path, *arguments)
 					
 					super
 				end
@@ -31,11 +34,18 @@ module Async
 				def close
 					super
 					
-					if @pid
-						::Process.kill("TERM", @pid)
-						::Process.wait(@pid)
-						@pid = nil
+					if @process
+						@process.close
+						@process = nil
 					end
+				end
+				
+				def desired_capabilities
+					{
+						alwaysMatch: {
+							browserName: "firefox",
+						}
+					}
 				end
 			end
 		end
