@@ -50,7 +50,7 @@ module Async
 			
 			# @parameter value [Integer] The timeout in milliseconds.
 			def script_timeout=(value)
-				post("timeouts", {type: "script", ms: value})
+				post("timeouts", {script: value})
 			end
 			
 			# The implicit wait timeout is the amount of time the driver should wait when searching for elements.
@@ -61,7 +61,7 @@ module Async
 			
 			# @parameter value [Integer] The timeout in milliseconds.
 			def implicit_wait_timeout=(value)
-				post("timeouts", {type: "implicit", ms: value})
+				post("timeouts", {implicit: value})
 			end
 			
 			# The page load timeout is the amount of time the driver should wait when loading a page.
@@ -72,7 +72,7 @@ module Async
 			
 			# @parameter value [Integer] The timeout in milliseconds.
 			def page_load_timeout=(value)
-				post("timeouts", {type: "page load", ms: value})
+				post("timeouts", {pageLoad: value})
 			end
 			
 			# Navigates to the given URL.

@@ -25,15 +25,15 @@ ASession = Sus::Shared("a session") do
 		expect(session.page_load_timeout).to be_a(Integer)
 	end
 	
-	# it "should be able to set timeouts" do
-	# 	session.script_timeout = 1000
-	# 	session.implicit_wait_timeout = 1000
-	# 	session.page_load_timeout = 1000
+	it "should be able to set timeouts" do
+		session.script_timeout = 1000
+		session.implicit_wait_timeout = 1000
+		session.page_load_timeout = 1000
 		
-	# 	expect(session.script_timeout).to be == 1000
-	# 	expect(session.implicit_wait_timeout).to be == 1000
-	# 	expect(session.page_load_timeout).to be == 1000
-	# end
+		expect(session.script_timeout).to be == 1000
+		expect(session.implicit_wait_timeout).to be == 1000
+		expect(session.page_load_timeout).to be == 1000
+	end
 	
 	# it "should be able to navigate to a page" do
 	# 	session.navigate("https://google.com")
