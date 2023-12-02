@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'async/http/server'
-require_relative 'lib/async/webdriver'
+require_relative '../lib/async/webdriver'
 
 APPLICATION_PORT = 9090
 
@@ -17,22 +17,21 @@ Async do
 	end
 	
 	bridge = Async::WebDriver::Bridge::Chrome.new
-	Console.info("Starting driver process...")
-	bridge.start
+	pool = Async::WebDriver::Bridge::Pool.new(bridge)
 	
-	2.times do
-		Async::WebDriver::Client.open(bridge.endpoint) do |client|
-			Console.info("Creating session...")
-			client.session(bridge.default_capabilities) do |session|
-				2.times do
-					Console.info("Visiting application...")
-					reply = session.visit("http://localhost:#{APPLICATION_PORT}")
-					Console.info("Reply", reply) # Another 100ms the next time.
-				end
+	Console.info("Starting driver process...")
+	pool.start
+	
+	8.times do
+		pool.session do |session|
+			8.times do
+				Console.info("Visiting application...")
+				reply = session.visit("http://localhost:#{APPLICATION_PORT}")
+				Console.info("Reply", reply) # Another 100ms the next time.
 			end
 		end
 	end
 ensure
-	bridge&.close
+	pool&.close
 	server_task&.stop
 end

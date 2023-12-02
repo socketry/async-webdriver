@@ -18,10 +18,10 @@ Async do
 		server.run
 	end
 	
-	2.times do
+	8.times do
 		Console.info("Starting driver process...")
 		web_driver = Selenium::WebDriver.for(:chrome)
-		2.times do
+		8.times do
 			Console.info("Visiting application...")
 			web_driver.navigate.to("http://localhost:#{APPLICATION_PORT}")
 		end

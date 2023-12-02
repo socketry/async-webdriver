@@ -28,16 +28,14 @@ module Async
 				@delegate.close
 			end
 			
-			# @parameter id [String] The session ID.
-			# @returns [Async::WebDriver::Session] A new session with the given ID.
-			def make_session(id, capabilities)
-				Session.new(@delegate, id, capabilities)
-			end
-			
-			def session(capabilities)
+			def session(capabilities, &block)
+				start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 				reply = post("session", {capabilities: capabilities})
 				
-				session = make_session(reply["sessionId"], reply["capabilities"])
+				duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+				Console.info(self, "Got session #{reply["sessionId"]}", duration: duration)
+				
+				session = Session.new(@delegate, reply["sessionId"], reply["value"])
 				
 				return session unless block_given?
 				

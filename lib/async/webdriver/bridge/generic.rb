@@ -2,17 +2,20 @@ require 'socket'
 require 'async/http/endpoint'
 require 'async/http/client'
 
-require_relative '../request_helper'
-require_relative '../session'
-
 module Async
 	module WebDriver
 		module Bridge
 			# Generic W3C WebDriver implementation.
 			class Generic
+				def self.start(**options)
+					self.new(**options).tap do |bridge|
+						bridge.start
+					end
+				end
+				
 				def initialize(port: nil)
 					@port = port
-					@status
+					@status = nil
 				end
 				
 				attr :status

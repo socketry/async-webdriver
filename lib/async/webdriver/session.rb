@@ -7,6 +7,21 @@ module Async
 			include RequestHelper
 			include Scope
 			
+			def self.open(endpoint, *arguments, **options)
+				client = self.new(
+					Async::HTTP::Client.open(endpoint, **options),
+					*arguments
+				)
+				
+				return client unless block_given?
+				
+				begin
+					yield client
+				ensure
+					client.close
+				end
+			end
+			
 			def initialize(delegate, id, capabilities)
 				@delegate = delegate
 				@id = id

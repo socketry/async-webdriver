@@ -19,7 +19,7 @@ Async::WebDriver::Bridge.each do |klass|
 	
 	describe(klass, unique: name) do
 		def bridge
-			@bridge ||= subject.new
+			@bridge ||= subject.start
 		end
 		
 		def after

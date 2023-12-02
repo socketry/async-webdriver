@@ -2,10 +2,12 @@
 
 source "https://rubygems.org"
 
-# gemspec
+gemspec
 
-gem "async"
-gem "async-http"
+group :maintenance, optional: true do
+	gem "bake-modernize"
+	gem "bake-gem"
+end
 
 group :test do
 	gem "sus"
