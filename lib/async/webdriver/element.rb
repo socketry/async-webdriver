@@ -22,7 +22,7 @@ module Async
 			attr :delegate
 			attr :id
 			
-			def full_path(path = nil)
+			def request_path(path = nil)
 				if path
 					"/session/#{@session.id}/element/#{@id}/#{path}"
 				else
