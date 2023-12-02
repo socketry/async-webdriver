@@ -3,13 +3,14 @@ require_relative 'process_group'
 
 module Async
 	module WebDriver
-		module Browser
-			class Firefox < Generic
-				def initialize(path: "geckodriver", headless: true)
+		module Bridge
+			class Chrome < Generic
+				def initialize(path: "chromedriver", headless: true)
 					super()
 					
 					@path = path
 					@headless = headless
+					@process = nil
 				end
 				
 				def version
@@ -22,7 +23,8 @@ module Async
 				
 				def arguments
 					[
-						"--port", self.port.to_s,
+						"--port=#{self.port}",
+						@headless ? "--headless=new" : nil,
 					].compact
 				end
 				
@@ -41,13 +43,10 @@ module Async
 					end
 				end
 				
-				def desired_capabilities
+				def default_capabilities
 					{
 						alwaysMatch: {
-							browserName: "firefox",
-							"moz:firefoxOptions": {
-								"args": [@headless ? "-headless" : nil].compact,
-							}
+							browserName: "chrome",
 						}
 					}
 				end

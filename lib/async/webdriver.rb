@@ -1,2 +1,2 @@
-require_relative 'webdriver/browser'
-require_relative 'webdriver/session'
+require_relative 'webdriver/bridge'
+require_relative 'webdriver/client'

@@ -2,7 +2,7 @@
 
 module Async
 	module WebDriver
-		module Browser
+		module Bridge
 			class ProcessGroup
 				def self.spawn(*arguments)
 					# This might be problematic...

@@ -3,13 +3,13 @@ require 'sus/fixtures/async/reactor_context'
 require 'sus/fixtures/async/http/server_context'
 
 require 'async/webdriver/session'
-require 'async/webdriver/browser'
+require 'async/webdriver/bridge'
 
 ASession = Sus::Shared("a session") do
 	include Sus::Fixtures::Async::ReactorContext
 	include Sus::Fixtures::Async::HTTP::ServerContext
 	
-	let(:session) {browser.session}
+	let(:session) {bridge.session}
 	
 	it "should have a session" do
 		expect(session).to be_a(Async::WebDriver::Session)
@@ -37,16 +37,16 @@ ASession = Sus::Shared("a session") do
 	end
 end
 
-Async::WebDriver::Browser.each do |klass|
+Async::WebDriver::Bridge.each do |klass|
 	name = klass.name.split("::").last
 	
 	describe(klass, unique: name) do
-		def browser
-			@browser ||= subject.new
+		def bridge
+			@bridge ||= subject.new
 		end
 		
 		def after
-			@browser&.close
+			@bridge&.close
 			super
 		end
 		

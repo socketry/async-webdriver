@@ -8,11 +8,7 @@ APPLICATION_PORT = 9090
 WEB_DRIVER_PORT = 4040
 
 Async do
-	Console.info("Starting driver process...")
-	web_driver = Selenium::WebDriver.for(:chrome)
-	
 	application_endpoint = Async::HTTP::Endpoint.parse("http://localhost:#{APPLICATION_PORT}")
-	
 	Console.info("Starting application server...")
 	Async(transient: true) do
 		server = Async::HTTP::Server.for(application_endpoint) do |request|
@@ -22,14 +18,14 @@ Async do
 		server.run
 	end
 	
-	Console.info("Visiting application...")
-	web_driver.navigate.to("http://localhost:#{APPLICATION_PORT}")
-	
-	Console.info("Fetching body element...")
-	body = web_driver.find_element(tag_name: "body")
-	
-	binding.irb
-ensure
-	Process.kill("TERM", pid)
-	Process.wait(pid)
+	2.times do
+		Console.info("Starting driver process...")
+		web_driver = Selenium::WebDriver.for(:chrome)
+		2.times do
+			Console.info("Visiting application...")
+			web_driver.navigate.to("http://localhost:#{APPLICATION_PORT}")
+		end
+	ensure
+		web_driver.quit
+	end
 end

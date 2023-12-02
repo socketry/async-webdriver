@@ -6,7 +6,7 @@ require_relative 'error'
 module Async
 	module WebDriver
 		# Wraps the HTTP client to provide a consistent interface.
-		module ClientWrapper
+		module RequestHelper
 			CONTENT_TYPE = "application/json"
 			
 			GET_HEADERS = [
@@ -18,13 +18,16 @@ module Async
 				["content-type", "#{CONTENT_TYPE}; charset=UTF-8"],
 			].freeze
 			
-			protected
-			
-			def full_path(path)
-				"/#{path}"
+			def full_path(path = nil)
+				if path
+					"/#{path}"
+				else
+					"/"
+				end
 			end
 			
 			def extract_value(reply)
+				Console.debug(self, "Extracting value...", reply: reply)
 				value = reply["value"]
 				
 				if value.is_a?(Hash) and error = value["error"]
@@ -39,19 +42,27 @@ module Async
 			end
 			
 			def get(path)
-				Console.info(self, "GET #{full_path(path)}")
-				response = client.get(full_path(path), GET_HEADERS)
+				Console.debug(self, "GET #{full_path(path)}")
+				response = @delegate.get(full_path(path), GET_HEADERS)
 				reply = JSON.parse(response.read)
 				
 				return extract_value(reply)
 			end
 			
 			def post(path, arguments = {}, &block)
-				Console.info(self, "POST #{full_path(path)}", arguments:)
-				response = client.post(full_path(path), POST_HEADERS, arguments ? JSON.dump(arguments) : nil)
+				Console.debug(self, "POST #{full_path(path)}", arguments:)
+				response = @delegate.post(full_path(path), POST_HEADERS, arguments ? JSON.dump(arguments) : nil)
 				reply = JSON.parse(response.read)
 				
 				return extract_value(reply, &block)
+			end
+			
+			def delete(path = nil)
+				Console.debug(self, "DELETE #{full_path(path)}")
+				response = @delegate.delete(full_path(path), POST_HEADERS)
+				reply = JSON.parse(response.read)
+				
+				return extract_value(reply)
 			end
 		end
 	end

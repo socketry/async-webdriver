@@ -2,31 +2,31 @@
 require 'sus/fixtures/async/reactor_context'
 
 require 'async/webdriver/session'
-require 'async/webdriver/browser'
+require 'async/webdriver/bridge'
 
-ABrowser = Sus::Shared("a browser") do
+ABridge = Sus::Shared("a bridge") do
 	include Sus::Fixtures::Async::ReactorContext
 	
 	with "#status" do
 		it "is ready" do
-			expect(browser.status).to have_keys("ready" => be == true)
+			expect(bridge.status).to have_keys("ready" => be == true)
 		end
 	end
 end
 
-Async::WebDriver::Browser.each do |klass|
+Async::WebDriver::Bridge.each do |klass|
 	name = klass.name.split("::").last
 	
 	describe(klass, unique: name) do
-		def browser
-			@browser ||= subject.new
+		def bridge
+			@bridge ||= subject.new
 		end
 		
 		def after
-			@browser&.close
+			@bridge&.close
 			super
 		end
 		
-		it_behaves_like ABrowser
+		it_behaves_like ABridge
 	end
 end

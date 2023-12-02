@@ -1,32 +1,36 @@
 require_relative 'scope'
-require_relative 'client_wrapper'
+require_relative 'request_helper'
 
 module Async
 	module WebDriver
 		class Session
-			include ClientWrapper
+			include RequestHelper
 			include Scope
 			
-			def initialize(client, id)
-				@client = client
+			def initialize(delegate, id, capabilities)
+				@delegate = delegate
 				@id = id
+				@capabilities = capabilities
 			end
 			
-			attr :client
 			attr :id
+			attr :capabilities
 			
 			def session
 				self
 			end
 			
-			def full_path(path)
-				"/session/#{@id}/#{path}"
+			def full_path(path = nil)
+				if path
+					"/session/#{@id}/#{path}"
+				else
+					"/session/#{@id}"
+				end
 			end
 			
 			def close
-				if @client
-					@client.delete("/session/#{@id}")
-					@client = nil
+				if @delegate
+					self.delete
 				end
 				
 				@id = nil
@@ -38,7 +42,7 @@ module Async
 				return reply["value"]
 			end
 			
-			private def timeouts
+			def timeouts
 				get("timeouts")
 			end
 			
@@ -99,6 +103,10 @@ module Async
 			
 			def execute(script, *arguments)
 				post("execute", {script: script, args: arguments})
+			end
+			
+			def execute_async(script, *arguments)
+				post("execute_async", {script: script, args: arguments})
 			end
 		end
 	end

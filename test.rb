@@ -6,15 +6,9 @@ require_relative 'lib/async/webdriver'
 APPLICATION_PORT = 9090
 
 Async do
-	browser = Async::WebDriver::Browser::Chrome.new
-	
-	Console.info("Starting driver process...")
-	browser.start
-	
-	application_endpoint = Async::HTTP::Endpoint.parse("http://localhost:#{APPLICATION_PORT}")
-	
 	Console.info("Starting application server...")
-	Async(transient: true) do
+	application_endpoint = Async::HTTP::Endpoint.parse("http://localhost:#{APPLICATION_PORT}")
+	server_task = Async(transient: true) do
 		server = Async::HTTP::Server.for(application_endpoint) do |request|
 			Protocol::HTTP::Response[200, {}, ["Hello World"]]
 		end
@@ -22,13 +16,23 @@ Async do
 		server.run
 	end
 	
-	session = browser.session
+	bridge = Async::WebDriver::Bridge::Chrome.new
+	Console.info("Starting driver process...")
+	bridge.start
 	
-	Console.info("Visiting application...")
-	reply = session.visit("http://localhost:#{APPLICATION_PORT}")
-	Console.info("Reply", reply)
-	
-	binding.irb
+	2.times do
+		Async::WebDriver::Client.open(bridge.endpoint) do |client|
+			Console.info("Creating session...")
+			client.session(bridge.default_capabilities) do |session|
+				2.times do
+					Console.info("Visiting application...")
+					reply = session.visit("http://localhost:#{APPLICATION_PORT}")
+					Console.info("Reply", reply) # Another 100ms the next time.
+				end
+			end
+		end
+	end
 ensure
-	browser&.close
+	bridge&.close
+	server_task&.stop
 end
