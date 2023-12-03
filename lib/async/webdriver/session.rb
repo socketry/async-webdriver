@@ -41,21 +41,6 @@ module Async
 			# @attribute [Hash] The capabilities of the session.
 			attr :capabilities
 			
-			def session
-				self
-			end
-			
-			def current_scope
-				self
-			end
-			
-			include Scope::Alerts
-			include Scope::Cookies
-			include Scope::Elements
-			include Scope::Fields
-			include Scope::Printing
-			include Scope::ScreenCapture
-			
 			def request_path(path = nil)
 				if path
 					"/session/#{@id}/#{path}"
@@ -74,76 +59,24 @@ module Async
 				@id = nil
 			end
 			
-			def title
-				get("title")
+			def session
+				self
 			end
 			
-			def timeouts
-				get("timeouts")
+			def current_scope
+				self
 			end
 			
-			# The script timeout is the amount of time the driver should wait when executing JavaScript asynchronously.
-			# @returns [Integer] The timeout in milliseconds.
-			def script_timeout
-				timeouts["script"]
-			end
-			
-			# @parameter value [Integer] The timeout in milliseconds.
-			def script_timeout=(value)
-				post("timeouts", {script: value})
-			end
-			
-			# The implicit wait timeout is the amount of time the driver should wait when searching for elements.
-			# @returns [Integer] The timeout in milliseconds.
-			def implicit_wait_timeout
-				timeouts["implicit"]
-			end
-			
-			# @parameter value [Integer] The timeout in milliseconds.
-			def implicit_wait_timeout=(value)
-				post("timeouts", {implicit: value})
-			end
-			
-			# The page load timeout is the amount of time the driver should wait when loading a page.
-			# @returns [Integer] The timeout in milliseconds.
-			def page_load_timeout
-				timeouts["pageLoad"]
-			end
-			
-			# @parameter value [Integer] The timeout in milliseconds.
-			def page_load_timeout=(value)
-				post("timeouts", {pageLoad: value})
-			end
-			
-			# Navigates to the given URL.
-			# @parameter url [String] The URL to navigate to.
-			def visit(url)
-				post("url", {url: url})
-			end
-			
-			def current_url
-				get("url")
-			end
-			
-			def back
-				post("back")
-			end
-			
-			def forward
-				post("forward")
-			end
-			
-			def source
-				get("source")
-			end
-			
-			def execute(script, *arguments)
-				post("execute/sync", {script: script, args: arguments})
-			end
-			
-			def execute_async(script, *arguments)
-				post("execute/async", {script: script, args: arguments})
-			end
+			include Scope::Alerts
+			include Scope::Cookies
+			include Scope::Document
+			include Scope::Elements
+			include Scope::Fields
+			include Scope::Frames
+			include Scope::Navigation
+			include Scope::Printing
+			include Scope::ScreenCapture
+			include Scope::Timeouts
 		end
 	end
 end

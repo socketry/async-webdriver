@@ -64,6 +64,16 @@ module Async
 			attr :delegate
 			attr :id
 			
+			def request_path(path = nil)
+				if path
+					"/session/#{@session.id}/element/#{@id}/#{path}"
+				else
+					"/session/#{@session}/element/#{@id}"
+				end
+			end
+			
+			include RequestHelper
+			
 			def current_scope
 				self
 			end
@@ -74,16 +84,6 @@ module Async
 			include Scope::Fields
 			include Scope::Printing
 			include Scope::ScreenCapture
-			
-			def request_path(path = nil)
-				if path
-					"/session/#{@session.id}/element/#{@id}/#{path}"
-				else
-					"/session/#{@session}/element/#{@id}"
-				end
-			end
-			
-			include RequestHelper
 			
 			def children
 				post("elements", {using: "xpath", value: "./*"})
