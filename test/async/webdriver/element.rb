@@ -34,7 +34,7 @@ AnElement = Sus::Shared("an element") do
 		end
 	end
 	
-	with '#attributes' do; def timeout = nil
+	with '#attributes' do
 		it "should return attributes" do
 			session.visit(bound_url)
 			
@@ -68,7 +68,7 @@ AnElement = Sus::Shared("an element") do
 		end
 	end
 	
-	with Async::WebDriver::Retrieval do
+	with Async::WebDriver::Scope::Elements do
 		it "should find elements using css selector" do
 			session.visit(bound_url)
 			
@@ -155,7 +155,7 @@ AnElement = Sus::Shared("an element") do
 		end
 	end
 	
-	with Async::WebDriver::Fields do
+	with Async::WebDriver::Scope::Fields do
 		let(:app) do
 			proc do |request|
 				Protocol::HTTP::Response[200, [], [<<-HTML]]
@@ -208,7 +208,7 @@ AnElement = Sus::Shared("an element") do
 		it "should click buttons" do
 			session.visit(bound_url)
 			
-			session.submit_form
+			session.click_button("Submit")
 		end
 	end
 end

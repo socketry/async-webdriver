@@ -1,0 +1,23 @@
+module Async
+	module WebDriver
+		module Scope
+			module Alerts
+				def dismiss_alert
+					session.post("alert/dismiss")
+				end
+				
+				def accept_alert
+					session.post("alert/accept")
+				end
+				
+				def alert_text
+					session.get("alert/text")
+				end
+				
+				def send_alert_text(text)
+					session.post("alert/text", {text: text})
+				end
+			end
+		end
+	end
+end

@@ -43,9 +43,6 @@ module Async
 				end
 			end
 			
-			include Scope
-			include RequestHelper
-			
 			def initialize(session, id)
 				@session = session
 				@delegate = session.delegate
@@ -67,6 +64,17 @@ module Async
 			attr :delegate
 			attr :id
 			
+			def current_scope
+				self
+			end
+			
+			include Scope::Alerts
+			include Scope::Cookies
+			include Scope::Elements
+			include Scope::Fields
+			include Scope::Printing
+			include Scope::ScreenCapture
+			
 			def request_path(path = nil)
 				if path
 					"/session/#{@session.id}/element/#{@id}/#{path}"
@@ -74,6 +82,8 @@ module Async
 					"/session/#{@session}/element/#{@id}"
 				end
 			end
+			
+			include RequestHelper
 			
 			def children
 				post("elements", {using: "xpath", value: "./*"})
@@ -130,6 +140,8 @@ module Async
 			def selected?
 				get("selected")
 			end
+			
+			alias checked? selected?
 			
 			def enabled?
 				get("enabled")

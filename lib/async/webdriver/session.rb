@@ -7,16 +7,10 @@ require_relative 'request_helper'
 require_relative 'element'
 
 require_relative 'scope'
-require_relative 'print'
 
 module Async
 	module WebDriver
 		class Session
-			include RequestHelper
-			
-			include Scope
-			include Print
-			
 			def self.open(endpoint, *arguments, **options)
 				client = self.new(
 					Async::HTTP::Client.open(endpoint, **options),
@@ -51,6 +45,17 @@ module Async
 				self
 			end
 			
+			def current_scope
+				self
+			end
+			
+			include Scope::Alerts
+			include Scope::Cookies
+			include Scope::Elements
+			include Scope::Fields
+			include Scope::Printing
+			include Scope::ScreenCapture
+			
 			def request_path(path = nil)
 				if path
 					"/session/#{@id}/#{path}"
@@ -58,6 +63,8 @@ module Async
 					"/session/#{@id}"
 				end
 			end
+			
+			include RequestHelper
 			
 			def close
 				if @delegate
