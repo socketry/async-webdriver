@@ -3,62 +3,22 @@
 # Released under the MIT License.
 # Copyright, 2023, by Samuel Williams.
 
+require_relative 'retrieval'
+require_relative 'screen_capture'
+require_relative 'fields'
+
 module Async
 	module WebDriver
 		module Scope
-			def find_element(using, value)
-				reply = post("element", {using: using, value: value})
-				
-				return Element.new(self.session, JSON.parse(body)["element-6066-11e4-a52e-4f735466cecf"])
+			def current_scope
+				self
 			end
 			
-			def find_element_by_css(css)
-				find_element("css selector", css)
-			end
+			# These modules are named after the relevant sections in the W3C specification.
 			
-			def find_element_by_link_text(text)
-				find_element("link text", text)
-			end
-			
-			def find_element_by_partial_link_text(text)
-				find_element("partial link text", text)
-			end
-			
-			def find_element_by_tag_name(name)
-				find_element("tag name", name)
-			end
-			
-			def find_element_by_xpath(xpath)
-				find_element("xpath", xpath)
-			end
-			
-			def find_elements(using, value)
-				reply = post("elements", {using: using, value: value})
-				
-				return reply["value"].map do |element|
-					Element.new(self, element["element-6066-11e4-a52e-4f735466cecf"])
-				end
-			end
-			
-			def find_elements_by_css(css)
-				elements("css selector", css)
-			end
-			
-			def find_elements_by_link_text(text)
-				elements("link text", text)
-			end
-			
-			def find_elements_by_partial_link_text(text)
-				elements("partial link text", text)
-			end
-			
-			def find_elements_by_tag_name(name)
-				elements("tag name", name)
-			end
-			
-			def find_elements_by_xpath(xpath)
-				elements("xpath", xpath)
-			end
+			include Retrieval
+			include ScreenCapture
+			include	Fields
 		end
 	end
 end

@@ -68,7 +68,7 @@ module Async
 					reply = @sessions.pop
 					
 					duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
-					Console.info(self, "Got session #{reply["sessionId"]}", duration:)
+					Console.debug(self, "Got session #{reply["sessionId"]}", duration:)
 					Session.open(@bridge.endpoint, reply["sessionId"], reply["capabilities"], &block)
 				end
 			end

@@ -10,6 +10,9 @@ module Async
 	module WebDriver
 		# Wraps the HTTP client to provide a consistent interface.
 		module RequestHelper
+			# The web element identifier is the string constant "element-6066-11e4-a52e-4f735466cecf".
+			ELEMENT_KEY = "element-6066-11e4-a52e-4f735466cecf"
+			
 			CONTENT_TYPE = "application/json"
 			
 			GET_HEADERS = [
@@ -29,8 +32,24 @@ module Async
 				end
 			end
 			
+			def unwrap_object(value)
+				if value.is_a?(Hash) and value.key?(ELEMENT_KEY)
+					Element.new(self.session, value[ELEMENT_KEY])
+				else
+					value
+				end
+			end
+			
+			def unwrap_objects(value)
+				case value
+				when Hash
+					value.transform_values!(&method(:unwrap_object))
+				when Array
+					value.map!(&method(:unwrap_object))
+				end
+			end
+			
 			def extract_value(reply)
-				Console.debug(self, "Extracting value...", reply: reply)
 				value = reply["value"]
 				
 				if value.is_a?(Hash) and error = value["error"]
@@ -47,7 +66,7 @@ module Async
 			def get(path)
 				Console.debug(self, "GET #{request_path(path)}")
 				response = @delegate.get(request_path(path), GET_HEADERS)
-				reply = JSON.parse(response.read)
+				reply = JSON.load(response.read, self.method(:unwrap_objects))
 				
 				return extract_value(reply)
 			end
@@ -55,7 +74,7 @@ module Async
 			def post(path, arguments = {}, &block)
 				Console.debug(self, "POST #{request_path(path)}", arguments:)
 				response = @delegate.post(request_path(path), POST_HEADERS, arguments ? JSON.dump(arguments) : nil)
-				reply = JSON.parse(response.read)
+				reply = JSON.load(response.read, self.method(:unwrap_objects))
 				
 				return extract_value(reply, &block)
 			end
@@ -63,7 +82,7 @@ module Async
 			def delete(path = nil)
 				Console.debug(self, "DELETE #{request_path(path)}")
 				response = @delegate.delete(request_path(path), POST_HEADERS)
-				reply = JSON.parse(response.read)
+				reply = JSON.load(response.read, self.method(:unwrap_objects))
 				
 				return extract_value(reply)
 			end

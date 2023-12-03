@@ -38,7 +38,7 @@ module Async
 				reply = post("session", {capabilities: capabilities})
 				
 				duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
-				Console.info(self, "Got session #{reply["sessionId"]}", duration: duration)
+				Console.debug(self, "Got session #{reply["sessionId"]}", duration: duration)
 				
 				session = Session.new(@delegate, reply["sessionId"], reply["value"])
 				

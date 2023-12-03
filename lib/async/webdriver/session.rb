@@ -3,14 +3,19 @@
 # Released under the MIT License.
 # Copyright, 2023, by Samuel Williams.
 
-require_relative 'scope'
 require_relative 'request_helper'
+require_relative 'element'
+
+require_relative 'scope'
+require_relative 'print'
 
 module Async
 	module WebDriver
 		class Session
 			include RequestHelper
+			
 			include Scope
+			include Print
 			
 			def self.open(endpoint, *arguments, **options)
 				client = self.new(
@@ -33,7 +38,13 @@ module Async
 				@capabilities = capabilities
 			end
 			
+			# @attribute [Protocol::HTTP::Middleware] The underlying HTTP client (or wrapper).
+			attr :delegate
+			
+			# @attribute [String] The session identifier.
 			attr :id
+			
+			# @attribute [Hash] The capabilities of the session.
 			attr :capabilities
 			
 			def session
@@ -57,9 +68,7 @@ module Async
 			end
 			
 			def title
-				reply = get("title")
-				
-				return reply["value"]
+				get("title")
 			end
 			
 			def timeouts
@@ -122,11 +131,11 @@ module Async
 			end
 			
 			def execute(script, *arguments)
-				post("execute", {script: script, args: arguments})
+				post("execute/sync", {script: script, args: arguments})
 			end
 			
 			def execute_async(script, *arguments)
-				post("execute_async", {script: script, args: arguments})
+				post("execute/async", {script: script, args: arguments})
 			end
 		end
 	end
