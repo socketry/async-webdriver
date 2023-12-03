@@ -6,8 +6,12 @@ module Async
 	module WebDriver
 		module Scope
 			module Fields
+				def find_field(name)
+					current_scope.find_element_by_xpath("//*[@name=#{XPath::escape(name)}]")
+				end
+				
 				def fill_in(name, value)
-					element = current_scope.find_element_by_xpath("//*[@name=#{XPath::escape(name)}]")
+					element = find_field(name)
 					
 					if element.tag_name == "input" || element.tag_name == "textarea"
 						element.clear
