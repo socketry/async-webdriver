@@ -72,7 +72,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using css selector" do
 			session.visit(bound_url)
 			
-			element = session.find_element('css selector', "#foo")
+			element = session.find_element_by_css("#foo")
 			expect(element).to be_a(Async::WebDriver::Element)
 			expect(element.text).to be == "Hello World"
 		end
@@ -80,7 +80,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using xpath selector" do
 			session.visit(bound_url)
 			
-			element = session.find_element('xpath', "//div[@id='foo']")
+			element = session.find_element_by_xpath("//div[@id='foo']")
 			expect(element).to be_a(Async::WebDriver::Element)
 			expect(element.text).to be == "Hello World"
 		end
@@ -88,7 +88,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using link text" do
 			session.visit(bound_url)
 			
-			element = session.find_element('link text', "Foo Bar")
+			element = session.find_element_by_link_text("Foo Bar")
 			expect(element).to be_a(Async::WebDriver::Element)
 			expect(element.tag_name).to be == "a"
 			expect(element.text).to be == "Foo Bar"
@@ -97,7 +97,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using partial link text" do
 			session.visit(bound_url)
 			
-			element = session.find_element('partial link text', "Foo")
+			element = session.find_element_by_partial_link_text("Foo")
 			expect(element).to be_a(Async::WebDriver::Element)
 			expect(element.tag_name).to be == "a"
 			expect(element.text).to be == "Foo Bar"
@@ -106,7 +106,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using tag name" do
 			session.visit(bound_url)
 			
-			element = session.find_element('tag name', "div")
+			element = session.find_element_by_tag_name("div")
 			expect(element).to be_a(Async::WebDriver::Element)
 			expect(element.tag_name).to be == "div"
 			expect(element.text).to be == "Hello World"
@@ -115,7 +115,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using css selector" do
 			session.visit(bound_url)
 			
-			elements = session.find_elements('css selector', "li")
+			elements = session.find_elements_by_css("li")
 			expect(elements).to be_a(Array)
 			expect(elements.size).to be == 3
 			expect(elements.first).to be_a(Async::WebDriver::Element)
@@ -125,7 +125,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using xpath selector" do
 			session.visit(bound_url)
 			
-			elements = session.find_elements('xpath', "//li")
+			elements = session.find_elements_by_xpath("//li")
 			expect(elements).to be_a(Array)
 			expect(elements.size).to be == 3
 			expect(elements.first).to be_a(Async::WebDriver::Element)
@@ -135,7 +135,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using link text" do
 			session.visit(bound_url)
 			
-			elements = session.find_elements('link text', "Foo Bar")
+			elements = session.find_elements_by_link_text("Foo Bar")
 			expect(elements).to be_a(Array)
 			expect(elements.size).to be == 1
 			expect(elements.first).to be_a(Async::WebDriver::Element)
@@ -146,7 +146,7 @@ AnElement = Sus::Shared("an element") do
 		it "should find elements using partial link text" do
 			session.visit(bound_url)
 			
-			elements = session.find_elements('partial link text', "Bar")
+			elements = session.find_elements_by_partial_link_text("Bar")
 			expect(elements).to be_a(Array)
 			expect(elements.size).to be == 2
 			expect(elements.first).to be_a(Async::WebDriver::Element)

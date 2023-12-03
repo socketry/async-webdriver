@@ -85,14 +85,6 @@ module Async
 			include Scope::Printing
 			include Scope::ScreenCapture
 			
-			def children
-				post("elements", {using: "xpath", value: "./*"})
-			end
-			
-			def parent
-				post("element", {using: "xpath", value: ".."})
-			end
-			
 			def execute(script, *arguments)
 				@session.execute("return (function(){#{script}}).call(...arguments)", self, *arguments)
 			end
@@ -161,6 +153,12 @@ module Async
 			
 			def send_keys(text)
 				post("value", {text:})
+			end
+			
+			FRAME_TAGS = ["frame", "iframe"].freeze
+			
+			def frame?
+				FRAME_TAGS.include?(self.tag_name)
 			end
 		end
 	end
