@@ -31,7 +31,6 @@ Async do
 			8.times do
 				Console.info("Visiting application...")
 				reply = session.visit("http://localhost:#{APPLICATION_PORT}")
-				Console.info("Reply", reply) # Another 100ms the next time.
 			end
 		end
 	end
