@@ -28,6 +28,8 @@ module Async
 		# Locator.wrap(partial_link_text: "Ho")
 		# Locator.wrap(tag_name: "main")
 		# ```
+		#
+		# For more information, see: <https://w3c.github.io/webdriver/#locator-strategies>.
 		class Locator
 			# A convenience wrapper for specifying locators.
 			#
