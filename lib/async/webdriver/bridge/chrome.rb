@@ -10,11 +10,10 @@ module Async
 	module WebDriver
 		module Bridge
 			class Chrome < Generic
-				def initialize(path: "chromedriver", headless: true)
+				def initialize(path: "chromedriver")
 					super()
 					
 					@path = path
-					@headless = headless
 					@process = nil
 				end
 				
@@ -29,7 +28,6 @@ module Async
 				def arguments
 					[
 						"--port=#{self.port}",
-						@headless ? "--headless=new" : nil,
 					].compact
 				end
 				
@@ -48,11 +46,14 @@ module Async
 					end
 				end
 				
-				def default_capabilities
+				def default_capabilities(headless: true)
 					{
 						alwaysMatch: {
 							browserName: "chrome",
-						}
+							"goog:chromeOptions": {
+								args: [headless ? "--headless" : nil].compact,
+							}
+						},
 					}
 				end
 			end

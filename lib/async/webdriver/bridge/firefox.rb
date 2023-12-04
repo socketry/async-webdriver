@@ -10,11 +10,10 @@ module Async
 	module WebDriver
 		module Bridge
 			class Firefox < Generic
-				def initialize(path: "geckodriver", headless: true)
+				def initialize(path: "geckodriver")
 					super()
 					
 					@path = path
-					@headless = headless
 					@process = nil
 				end
 				
@@ -47,12 +46,12 @@ module Async
 					end
 				end
 				
-				def default_capabilities
+				def default_capabilities(headless: true)
 					{
 						alwaysMatch: {
 							browserName: "firefox",
 							"moz:firefoxOptions": {
-								"args": [@headless ? "-headless" : nil].compact,
+								"args": [headless ? "-headless" : nil].compact,
 							}
 						}
 					}
