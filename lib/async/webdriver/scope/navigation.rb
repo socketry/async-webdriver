@@ -1,3 +1,5 @@
+require 'uri'
+
 module Async
 	module WebDriver
 		module Scope
@@ -10,6 +12,10 @@ module Async
 				
 				def current_url
 					session.get("url")
+				end
+				
+				def current_path
+					URI.parse(current_url).path
 				end
 				
 				def navigate_back

@@ -7,6 +7,12 @@ module Async
 	module WebDriver
 		module Bridge
 			class Pool
+				def self.start(bridge, **options)
+					self.new(bridge, **options).tap do |pool|
+						pool.start
+					end
+				end
+				
 				def initialize(bridge, capabilities: bridge.default_capabilities, minimum: 2)
 					@bridge = bridge
 					@capabilities = capabilities

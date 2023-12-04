@@ -32,6 +32,10 @@ module Async
 				@capabilities = capabilities
 			end
 			
+			def inspect
+				"\#<#{self.class} id=#{@id.inspect}>"
+			end
+			
 			# @attribute [Protocol::HTTP::Middleware] The underlying HTTP client (or wrapper).
 			attr :delegate
 			
@@ -54,9 +58,8 @@ module Async
 			def close
 				if @delegate
 					self.delete
+					@delegate = nil
 				end
-				
-				@id = nil
 			end
 			
 			def session

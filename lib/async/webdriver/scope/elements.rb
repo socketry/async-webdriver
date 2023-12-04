@@ -4,44 +4,6 @@ module Async
 	module WebDriver
 		module Scope
 			module Elements
-				class Locator
-					def self.css(css)
-						new("css selector", css)
-					end
-					
-					def self.link_text(text)
-						new("link text", text)
-					end
-					
-					def self.partial_link_text(text)
-						new("partial link text", text)
-					end
-					
-					def self.tag_name(name)
-						new("tag name", name)
-					end
-					
-					def self.xpath(xpath)
-						new("xpath", xpath)
-					end
-					
-					def initialize(using, value)
-						@using = using
-						@value = value
-					end
-					
-					attr :using
-					attr :value
-					
-					def as_json
-						{using: @using, value: @value}
-					end
-					
-					def to_json(...)
-						as_json.to_json(...)
-					end
-				end
-				
 				def find_element(locator)
 					current_scope.post("element", locator)
 				end
