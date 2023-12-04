@@ -123,6 +123,19 @@ module Async
 			include Scope::Printing
 			include Scope::ScreenCapture
 			include Scope::Timeouts
+			
+			# Reset the session to a clean state.
+			def reset!
+				# Go to a blank page (in theory this should also invalidate any Element instances):
+				self.navigate_to("about:blank")
+				
+				# Clear cookies and local storage:
+				self.delete_all_cookies
+				self.execute("localStorage.clear();")
+				
+				# Detach the session instance from the underlying HTTP client:
+				@delegate = nil
+			end
 		end
 	end
 end

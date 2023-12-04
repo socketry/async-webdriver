@@ -91,7 +91,25 @@ module Async
 					
 					reply = @sessions.pop
 					
-					Session.open(@bridge.endpoint, reply["sessionId"], reply["capabilities"], &block)
+					session = Session.open(@bridge.endpoint, reply["sessionId"], reply["capabilities"])
+					
+					return session unless block_given?
+					
+					begin
+						yield session
+						
+						# Try to reuse the session for extreme performance:
+						reuse(session)
+						session = nil
+					ensure
+						session&.close
+					end
+				end
+				
+				def reuse(session)
+					session.reset!
+					
+					@sessions << {"sessionId" => session.id, "capabilities" => session.capabilities}
 				end
 			end
 		end
