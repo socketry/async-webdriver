@@ -21,6 +21,7 @@ module Async
 		# ensure
 		# 	bridge&.close
 		# end
+		# ```
 		class Session
 			# Open a new session.
 			# @parameter endpoint [Async::HTTP::Endpoint] The endpoint to connect to.
