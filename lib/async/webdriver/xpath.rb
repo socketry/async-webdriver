@@ -5,7 +5,13 @@
 
 module Async
 	module WebDriver
+		# Helpers for working with XPath.
 		module XPath
+			# Escape a value for use in XPath.
+			#
+			# XPath 1.0  does not provide any standard mechanism for escaping quotes, so we have to do it ourselves using `concat`.
+			#
+			# @parameter value [String | Numeric] The value to escape.
 			def self.escape(value)
 				case value
 				when String

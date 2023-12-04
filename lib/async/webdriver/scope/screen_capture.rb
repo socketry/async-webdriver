@@ -8,11 +8,14 @@ require 'base64'
 module Async
 	module WebDriver
 		module Scope
+			# Helpers for working with screen capture.
 			module ScreenCapture
+				# Take a screenshot of the current page or element.
+				# @returns [String] The screenshot as a Base64 encoded string.
 				def screenshot
 					reply = current_scope.post("screenshot")
 					
-					return Base64.decode64(reply["value"])
+					return Base64.decode64(reply)
 				end
 			end
 		end

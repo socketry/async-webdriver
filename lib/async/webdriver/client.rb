@@ -11,6 +11,11 @@ module Async
 		class Client
 			include RequestHelper
 			
+			# Open a new session.
+			# @parameter endpoint [Async::HTTP::Endpoint] The endpoint to connect to.
+			# @yields {|client| ...} The client will be closed automatically if you provide a block.
+			# 	@parameter client [Client] The client.
+			# @returns [Client] The client if no block is given.
 			def self.open(endpoint, **options)
 				client = self.new(
 					Async::HTTP::Client.open(endpoint, **options)
@@ -25,20 +30,23 @@ module Async
 				end
 			end
 			
+			# Initialize the client.
+			# @parameter delegate [Protocol::HTTP::Middleware] The underlying HTTP client (or wrapper).
 			def initialize(delegate)
 				@delegate = delegate
 			end
 			
+			# Close the client.
 			def close
 				@delegate.close
 			end
 			
+			# Request a new session.
+			# @returns [Session] The session if no block is given.
+			# @yields {|session| ...} The session will be closed automatically if you provide a block.
+			# 	@parameter session [Session] The session.
 			def session(capabilities, &block)
-				start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 				reply = post("session", {capabilities: capabilities})
-				
-				duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
-				Console.debug(self, "Got session #{reply["sessionId"]}", duration: duration)
 				
 				session = Session.new(@delegate, reply["sessionId"], reply["value"])
 				
@@ -49,10 +57,6 @@ module Async
 				ensure
 					session.close
 				end
-			end
-			
-			def desired_capabilities
-				{}
 			end
 		end
 	end

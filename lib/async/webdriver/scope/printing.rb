@@ -8,6 +8,7 @@ require 'base64'
 module Async
 	module WebDriver
 		module Scope
+			# Helpers for working with printing.
 			module Printing
 				# Print the current page and return the result as a Base64 encoded string containing a PDF representation of the paginated document.
 				def print(page_ranges: nil, total_pages: nil)

@@ -6,7 +6,10 @@
 module Async
 	module WebDriver
 		module Scope
+			# Helpers for working with timeouts.
 			module Timeouts
+				# Get the current timeouts.
+				# @returns [Hash] The timeouts.
 				def timeouts
 					session.get("timeouts")
 				end
@@ -17,6 +20,7 @@ module Async
 					timeouts["script"]
 				end
 				
+				# Set the script timeout.
 				# @parameter value [Integer] The timeout in milliseconds.
 				def script_timeout=(value)
 					session.post("timeouts", {script: value})
@@ -28,6 +32,7 @@ module Async
 					timeouts["implicit"]
 				end
 				
+				# Set the implicit wait timeout.
 				# @parameter value [Integer] The timeout in milliseconds.
 				def implicit_wait_timeout=(value)
 					session.post("timeouts", {implicit: value})
@@ -39,6 +44,7 @@ module Async
 					timeouts["pageLoad"]
 				end
 				
+				# Set the page load timeout.
 				# @parameter value [Integer] The timeout in milliseconds.
 				def page_load_timeout=(value)
 					session.post("timeouts", {pageLoad: value})
