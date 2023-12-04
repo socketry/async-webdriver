@@ -40,6 +40,8 @@ module Async
 						Async do |task|
 							task.with_timeout(1) do
 								::Process.wait(@pid)
+							rescue Errno::ECHILD
+								# Done.
 							rescue Async::TimeoutError
 								Console.info(self, "Killing pid #{@pid}...")
 								::Process.kill("KILL", -@pid)

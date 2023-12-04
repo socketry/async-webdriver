@@ -30,6 +30,10 @@ jobs:
         ruby-version: ${{matrix.ruby}}
         bundler-cache: true
     
+    - uses: browser-actions/setup-chrome@v1
+    - uses: browser-actions/setup-firefox@v1
+    - uses: browser-actions/setup-geckodriver@latest
+    
     - name: Run tests
       timeout-minutes: 5
       run: bundle exec bake test
