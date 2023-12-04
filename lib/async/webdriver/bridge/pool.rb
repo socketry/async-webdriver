@@ -7,6 +7,15 @@ module Async
 	module WebDriver
 		module Bridge
 			# A pool of sessions.
+			#
+			# ``` ruby
+			# begin
+			# 	bridge = Async::WebDriver::Bridge::Pool.start(Async::WebDriver::Bridge::Chrome.new)
+			# 	session = bridge.session
+			# ensure
+			# 	bridge&.close
+			# end
+			# ```
 			class Pool
 				# Create a new session pool and start it.
 				# @parameter bridge [Bridge] The bridge to use to create sessions.

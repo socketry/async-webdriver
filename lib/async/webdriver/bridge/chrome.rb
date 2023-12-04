@@ -10,6 +10,15 @@ module Async
 	module WebDriver
 		module Bridge
 			# A bridge to the Chrome browser using `chromedriver`.
+			#
+			# ``` ruby
+			# begin
+			# 	bridge = Async::WebDriver::Bridge::Chrome.start
+			# 	client = Async::WebDriver::Client.open(bridge.endpoint)
+			# ensure
+			# 	bridge&.close
+			# end
+			# ```
 			class Chrome < Generic
 				# Create a new bridge to Chrome.
 				# @parameter path [String] The path to the `chromedriver` executable.

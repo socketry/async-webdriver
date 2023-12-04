@@ -8,6 +8,18 @@ require_relative 'session'
 
 module Async
 	module WebDriver
+		# A client for the WebDriver protocol.
+		#
+		# If you have a running web driver server, you can connect to it like so (assuming it is running on port 4444):
+		#
+		# ``` ruby
+		# begin
+		# 	client = Async::WebDriver::Client.open(Async::HTTP::Endpoint.parse("http://localhost:4444"))
+		# 	session = client.session
+		# ensure
+		# 	client&.close
+		# end
+		# ```
 		class Client
 			include RequestHelper
 			

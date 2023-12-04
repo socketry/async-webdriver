@@ -8,6 +8,26 @@ require 'base64'
 module Async
 	module WebDriver
 		# A locator is used to find elements in the DOM.
+		#
+		# You can use the following convenience methods to create locators:
+		#
+		# ``` ruby
+		# Locator.css("main#content")
+		# Locator.xpath("//main[@id='content']")
+		# Locator.link_text("Home")
+		# Locator.partial_link_text("Ho")
+		# Locator.tag_name("main")
+		# ```
+		#
+		# You can also use the `Locator.wrap` method to create locators from a hash:
+		#
+		# ``` ruby
+		# Locator.wrap(css: "main#content")
+		# Locator.wrap(xpath: "//main[@id='content']")
+		# Locator.wrap(link_text: "Home")
+		# Locator.wrap(partial_link_text: "Ho")
+		# Locator.wrap(tag_name: "main")
+		# ```
 		class Locator
 			# A convenience wrapper for specifying locators.
 			#

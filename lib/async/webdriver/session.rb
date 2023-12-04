@@ -11,6 +11,16 @@ require_relative 'scope'
 module Async
 	module WebDriver
 		# A session represents a single browser session, potentially with multiple windows. It is the primary interface for interacting with a browser.
+		#
+		# ``` ruby
+		# begin
+		# 	bridge = Async::WebDriver::Bridge::Pool.start(Async::WebDriver::Bridge::Chrome.new)
+		# 	session = bridge.session
+		# 	session.navigate_to("https://google.com")
+		# 	# ...
+		# ensure
+		# 	bridge&.close
+		# end
 		class Session
 			# Open a new session.
 			# @parameter endpoint [Async::HTTP::Endpoint] The endpoint to connect to.

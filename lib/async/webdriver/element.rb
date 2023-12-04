@@ -10,6 +10,11 @@ require_relative 'scope'
 module Async
 	module WebDriver
 		# An element represents a DOM element. This class is used to interact with the DOM.
+		#
+		# ``` ruby
+		# element = session.find_element(:css, "main#content")
+		# element.click
+		# ```
 		class Element
 			# Attributes associated with an element.
 			class Attributes

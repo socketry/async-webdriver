@@ -7,6 +7,13 @@ module Async
 	module WebDriver
 		module Scope
 			# Helpers for working with alerts.
+			#
+			# ``` ruby
+			# session.dismiss_alert
+			# session.accept_alert
+			# session.alert_text
+			# session.set_alert_text("Hello, World!")
+			# ```
 			module Alerts
 				# Dismiss the current alert.
 				def dismiss_alert
@@ -24,7 +31,7 @@ module Async
 				end
 				
 				# Set the text input of the current alert.
-				def send_alert_text(text)
+				def set_alert_text(text)
 					session.post("alert/text", {text: text})
 				end
 			end

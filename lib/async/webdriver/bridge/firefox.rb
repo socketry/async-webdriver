@@ -10,6 +10,14 @@ module Async
 	module WebDriver
 		module Bridge
 			# A bridge to the Firefox browser using `geckodriver`.
+			#
+			# ``` ruby
+			# begin
+			# 	bridge = Async::WebDriver::Bridge::Firefox.start
+			# 	client = Async::WebDriver::Client.open(bridge.endpoint)
+			# ensure
+			# 	bridge&.close
+			# end
 			class Firefox < Generic
 				# Create a new bridge to Firefox.
 				# @parameter path [String] The path to the `geckodriver` executable.

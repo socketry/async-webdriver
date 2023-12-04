@@ -7,6 +7,14 @@ module Async
 	module WebDriver
 		module Scope
 			# Helpers for working with timeouts.
+			#
+			# If your tests are failing because the page is not loading fast enough, you can increase the page load timeout:
+			#
+			# ``` ruby
+			# session.script_timeout = 1000 # 1 second
+			# session.implicit_wait_timeout = 10_000 # 10 seconds
+			# session.page_load_timeout = 60_000 # 60 seconds
+			# ```
 			module Timeouts
 				# Get the current timeouts.
 				# @returns [Hash] The timeouts.

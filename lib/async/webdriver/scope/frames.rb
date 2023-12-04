@@ -7,6 +7,11 @@ module Async
 	module WebDriver
 		module Scope
 			# Helpers for working with frames.
+			#
+			# ``` ruby
+			# session.switch_to_frame(frame)
+			# session.switch_to_parent_frame
+			# ```
 			module Frames
 				# Switch to the given frame.
 				#
