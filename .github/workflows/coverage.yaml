@@ -33,6 +33,8 @@ jobs:
     - uses: browser-actions/setup-chrome@v1
     - uses: browser-actions/setup-firefox@v1
     - uses: browser-actions/setup-geckodriver@latest
+      with:
+        token: ${{secrets.GITHUB_TOKEN}}
     
     - name: Run tests
       timeout-minutes: 5
