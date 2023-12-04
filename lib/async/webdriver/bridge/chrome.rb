@@ -38,6 +38,11 @@ module Async
 					return nil
 				end
 				
+				# Unlimited concurrency.
+				def concurrency
+					true
+				end
+				
 				# @returns [Array(String)] The arguments to pass to the `chromedriver` executable.
 				def arguments
 					[

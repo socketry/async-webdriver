@@ -37,6 +37,11 @@ module Async
 					return nil
 				end
 				
+				# Limited concurrency.
+				def concurrency
+					1
+				end
+				
 				# @returns [Array(String)] The arguments to pass to the `geckodriver` executable.
 				def arguments
 					[
