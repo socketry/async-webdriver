@@ -21,7 +21,7 @@ ASession = Sus::Shared("a session") do
 	
 	it "can visit url" do
 		session.visit(bound_url)
-		expect(session.source).to be =~ /Hello World/
+		expect(session.document_source).to be =~ /Hello World/
 	end
 	
 	it "should have timeouts" do

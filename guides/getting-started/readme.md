@@ -39,7 +39,7 @@ Async do
 	session.fill_in('q', 'async-webdriver')
 	session.click_button("I'm Feeling Lucky")
 	
-	puts session.title
+	puts session.document_title
 ensure
 	session&.close
 	client&.close

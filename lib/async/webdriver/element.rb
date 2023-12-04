@@ -114,13 +114,6 @@ module Async
 				self
 			end
 			
-			include Scope::Alerts
-			include Scope::Cookies
-			include Scope::Elements
-			include Scope::Fields
-			include Scope::Printing
-			include Scope::ScreenCapture
-			
 			# Execute a script in the context of the element. `this` will be the element.
 			# @parameter script [String] The script to execute.
 			# @parameter arguments [Array] The arguments to pass to the script.
@@ -134,6 +127,13 @@ module Async
 			def execute_async(script, *arguments)
 				@session.execute_async("return (function(){#{script}}).call(...arguments)", self, *arguments)
 			end
+			
+			include Scope::Alerts
+			include Scope::Cookies
+			include Scope::Elements
+			include Scope::Fields
+			include Scope::Printing
+			include Scope::ScreenCapture
 			
 			# Get the value of an attribute.
 			#
