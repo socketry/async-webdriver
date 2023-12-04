@@ -121,7 +121,7 @@ module Async
 				get("name")
 			end
 			
-			Rectangle = Data.define(:x, :y, :width, :height)
+			Rectangle = Struct.new(:x, :y, :width, :height)
 			
 			def rectangle
 				get("rect").tap do |reply|
@@ -152,7 +152,7 @@ module Async
 			end
 			
 			def send_keys(text)
-				post("value", {text:})
+				post("value", {text: text})
 			end
 			
 			FRAME_TAGS = ["frame", "iframe"].freeze

@@ -27,8 +27,7 @@ module Async
 				end
 				
 				def check(field_name, value = true)
-					xpath = "//input[@type='checkbox' and @name='#{field_name}']"
-					element = current_scope.find_element(xpath:)
+					element = current_scope.find_element(xpath: "//input[@type='checkbox' and @name='#{field_name}']")
 					
 					if element.checked? != value
 						element.click

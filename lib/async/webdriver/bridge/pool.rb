@@ -56,11 +56,9 @@ module Async
 							
 							while @waiting.pop
 								session = prepare_session(client)
-								Console.info(self, "Pooled session #{session["sessionId"]}")
 								@sessions << session
 							end
 						ensure
-							Console.info(self, "Exiting pool thread...")
 							client&.close
 							@bridge.close
 						end
@@ -68,13 +66,10 @@ module Async
 				end
 				
 				def session(&block)
-					start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
 					@waiting << true
 					
 					reply = @sessions.pop
 					
-					duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
-					Console.debug(self, "Got session #{reply["sessionId"]}", duration:)
 					Session.open(@bridge.endpoint, reply["sessionId"], reply["capabilities"], &block)
 				end
 			end

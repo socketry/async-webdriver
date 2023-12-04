@@ -72,7 +72,7 @@ module Async
 			end
 			
 			def post(path, arguments = {}, &block)
-				Console.debug(self, "POST #{request_path(path)}", arguments:)
+				Console.debug(self, "POST #{request_path(path)}", arguments: arguments)
 				response = @delegate.post(request_path(path), POST_HEADERS, arguments ? JSON.dump(arguments) : nil)
 				reply = JSON.load(response.read, self.method(:unwrap_objects))
 				
