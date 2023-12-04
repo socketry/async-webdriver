@@ -131,7 +131,9 @@ module Async
 				
 				# Clear cookies and local storage:
 				self.delete_all_cookies
-				self.execute("localStorage.clear();")
+				
+				# This does not work consistently:
+				# self.execute("localStorage.clear();")
 				
 				# Detach the session instance from the underlying HTTP client:
 				@delegate = nil
