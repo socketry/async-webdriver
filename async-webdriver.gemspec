@@ -13,7 +13,12 @@ Gem::Specification.new do |spec|
 	spec.cert_chain  = ['release.cert']
 	spec.signing_key = File.expand_path('~/.gem/release.pem')
 	
-	spec.homepage = "https://github.com/socketry/async-webdriver"
+	spec.homepage = "https://github.com/socketry/async-webdriver/"
+	
+	spec.metadata = {
+		"documentation_uri" => "https://socketry.github.io/async-webdriver/",
+		"funding_uri" => "https://github.com/sponsors/ioquatix",
+	}
 	
 	spec.files = Dir.glob(['{lib}/**/*', '*.md'], File::FNM_DOTMATCH, base: __dir__)
 	
