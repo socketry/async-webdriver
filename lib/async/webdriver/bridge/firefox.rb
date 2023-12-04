@@ -9,7 +9,10 @@ require_relative 'process_group'
 module Async
 	module WebDriver
 		module Bridge
+			# A bridge to the Firefox browser using `geckodriver`.
 			class Firefox < Generic
+				# Create a new bridge to Firefox.
+				# @parameter path [String] The path to the `geckodriver` executable.
 				def initialize(path: "geckodriver")
 					super()
 					
@@ -17,6 +20,7 @@ module Async
 					@process = nil
 				end
 				
+				# @returns [String] The version of the `geckodriver` executable.
 				def version
 					::IO.popen([@path, "--version"]) do |io|
 						return io.read
@@ -25,18 +29,21 @@ module Async
 					return nil
 				end
 				
+				# @returns [Array(String)] The arguments to pass to the `geckodriver` executable.
 				def arguments
 					[
 						"--port", self.port.to_s,
 					].compact
 				end
 				
+				# Start the driver.
 				def start
 					@process ||= ProcessGroup.spawn(@path, *arguments)
 					
 					super
 				end
 				
+				# Close the driver.
 				def close
 					super
 					
@@ -46,6 +53,9 @@ module Async
 					end
 				end
 				
+				# The default capabilities for the Firefox browser which need to be provided when requesting a new session.
+				# @parameter headless [Boolean] Whether to run the browser in headless mode.
+				# @returns [Hash] The default capabilities for the Firefox browser.
 				def default_capabilities(headless: true)
 					{
 						alwaysMatch: {

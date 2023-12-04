@@ -6,7 +6,10 @@
 module Async
 	module WebDriver
 		module Bridge
+			# A group of processes that are all killed when the group is closed.
 			class ProcessGroup
+				# Spawn a new process group with a given command.
+				# @parameter arguments [Array] The command to execute.
 				def self.spawn(*arguments)
 					# This might be problematic...
 					self.new(
@@ -14,6 +17,8 @@ module Async
 					)
 				end
 				
+				# Create a new process group from an existing process id.
+				# @parameter pid [Integer] The process id.
 				def initialize(pid)
 					@pid = pid
 					
@@ -28,6 +33,7 @@ module Async
 					end
 				end
 				
+				# Close the process group.
 				def close
 					if @status_task
 						@status_task.stop
@@ -55,6 +61,7 @@ module Async
 				
 				protected
 				
+				# Wait for all processes in the group to exit.
 				def wait_all(pgid)
 					while true
 						pid, status = ::Process.wait2(pgid, ::Process::WNOHANG)

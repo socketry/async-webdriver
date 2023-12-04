@@ -6,13 +6,22 @@
 module Async
 	module WebDriver
 		module Bridge
+			# A pool of sessions.
 			class Pool
+				# Create a new session pool and start it.
+				# @parameter bridge [Bridge] The bridge to use to create sessions.
+				# @parameter capabilities [Hash] The capabilities to use when creating sessions.
+				# @returns [Pool] The pool.
 				def self.start(bridge, **options)
 					self.new(bridge, **options).tap do |pool|
 						pool.start
 					end
 				end
 				
+				# Initialize the session pool.
+				# @parameter bridge [Bridge] The bridge to use to create sessions.
+				# @parameter capabilities [Hash] The capabilities to use when creating sessions.
+				# @parameter minimum [Integer] The minimum number of sessions to keep open.
 				def initialize(bridge, capabilities: bridge.default_capabilities, minimum: 2)
 					@bridge = bridge
 					@capabilities = capabilities
@@ -24,6 +33,7 @@ module Async
 					@sessions = Thread::Queue.new
 				end
 				
+				# Close the session pool.
 				def close
 					if @waiting
 						@waiting.close
@@ -39,10 +49,11 @@ module Async
 					end
 				end
 				
-				def prepare_session(client)
+				private def prepare_session(client)
 					client.post("session", {capabilities: @capabilities})
 				end
 				
+				# Start the session pool.
 				def start
 					@thread ||= Thread.new do
 						Sync do
@@ -65,6 +76,7 @@ module Async
 					end
 				end
 				
+				# Open a session.
 				def session(&block)
 					@waiting << true
 					
