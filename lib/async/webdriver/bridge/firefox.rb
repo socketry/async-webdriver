@@ -74,7 +74,7 @@ module Async
 						alwaysMatch: {
 							browserName: "firefox",
 							"moz:firefoxOptions": {
-								"args": [headless ? "-headless" : nil].compact,
+								args: [headless ? "-headless" : nil].compact,
 							}
 						}
 					}

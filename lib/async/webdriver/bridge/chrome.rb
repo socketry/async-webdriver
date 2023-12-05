@@ -26,7 +26,6 @@ module Async
 					super()
 					
 					@path = path
-					@process = nil
 				end
 				
 				# @returns [String] The version of the `chromedriver` executable.
@@ -44,15 +43,15 @@ module Async
 				end
 				
 				# @returns [Array(String)] The arguments to pass to the `chromedriver` executable.
-				def arguments
+				def arguments(**options)
 					[
 						"--port=#{self.port}",
 					].compact
 				end
 				
 				# Start the driver.
-				def start
-					@process ||= ProcessGroup.spawn(@path, *arguments)
+				def start(**options)
+					Driver.spawn(@path, self.arguments(**options))
 					
 					super
 				end
