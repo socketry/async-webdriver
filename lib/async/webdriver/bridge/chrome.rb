@@ -76,7 +76,8 @@ module Async
 							browserName: "chrome",
 							"goog:chromeOptions": {
 								args: [headless ? "--headless" : nil].compact,
-							}
+							},
+							webSocketUrl: true,
 						},
 					}
 				end

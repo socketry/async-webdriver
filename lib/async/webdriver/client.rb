@@ -60,7 +60,7 @@ module Async
 			def session(capabilities, &block)
 				reply = post("session", {capabilities: capabilities})
 				
-				session = Session.new(@delegate, reply["sessionId"], reply["value"])
+				session = Session.new(@delegate, reply["sessionId"], reply["capabilities"])
 				
 				return session unless block_given?
 				
