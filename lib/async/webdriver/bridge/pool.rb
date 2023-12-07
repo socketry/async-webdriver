@@ -6,6 +6,8 @@
 require 'async/actor'
 require 'async/pool'
 
+require_relative '../session'
+
 module Async
 	module WebDriver
 		module Bridge
