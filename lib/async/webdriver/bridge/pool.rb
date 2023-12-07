@@ -11,7 +11,7 @@ require_relative '../session'
 module Async
 	module WebDriver
 		module Bridge
-			# A pool of sessions.
+			# A pool of sessions, constructed from a bridge, which instantiates drivers as needed. Drivers are capable of supporting 1 ore more sessions.
 			#
 			# ``` ruby
 			# begin
@@ -24,35 +24,52 @@ module Async
 			class Pool
 				class BridgeController
 					def initialize(bridge, capabilities: bridge.default_capabilities)
-						@driver = bridge.start
-						@client = Client.open(driver.endpoint)
+						@bridge = bridge
 						@capabilities = capabilities
+						@pool = Async::Pool::Controller.new(@bridge.method(:start))
+						
+						# This is a buffer of sessions that have been released but not yet reused.
+						@sessions = []
 					end
 					
-					def concurrency
-						@driver.concurrency || 8
+					def acquire
+						if @sessions.empty?
+							driver = self.acquire
+							client = driver.client
+							
+							session = client.post("session", {capabilities: @capabilities})
+							
+							# This is not thread safe and is just an opaque token for later releasing the session.
+							session[:driver] = driver
+							session[:endpoint] = driver.endpoint
+							
+							return session
+						else
+							return @sessions.pop
+						end
 					end
 					
-					# Allocate a new session.
-					def call
-						client.post("session", {capabilities: @capabilities})
+					def release(session)
+						@sessions.push(session)
 					end
-				end
-				
-				# Create a new session pool and start it.
-				# @parameter bridge [Bridge] The bridge to use to create sessions.
-				# @parameter capabilities [Hash] The capabilities to use when creating sessions.
-				# @returns [Pool] The pool.
-				def self.start(bridge, **options)
-					self.new(bridge, **options)
+					
+					def retire(session)
+						@pool.retire(session[:driver])
+					end
+					
+					def close
+						if @pool
+							@pool.close
+							@pool = nil
+						end
+						
+						@sessions = nil
+					end
 				end
 				
 				# Initialize the session pool.
 				# @parameter bridge [Bridge] The bridge to use to create sessions.
-				# @parameter capabilities [Hash] The capabilities to use when creating sessions.
-				# @parameter initial [Integer] The initial number of sessions to keep open.
 				def initialize(bridge, **options)
-					@bridge = bridge
 					@controller = Async::Actor.new(BridgeController.new(bridge, **options))
 				end
 				
@@ -61,16 +78,17 @@ module Async
 					@controller.close
 				end
 				
-				class ReusableSession < Session
-					def initialize(pool, driver, ...)
-						super(...)
-						
-						@pool = pool
-						@driver = driver
+				class CachedWrapper < Session
+					def pool
+						@options[:pool]
+					end
+					
+					def payload
+						@options[:payload]
 					end
 					
 					def close
-						unless @pool.reuse(self, @driver)
+						unless self.pool.reuse(self)
 							super
 						end
 					end
@@ -78,11 +96,9 @@ module Async
 				
 				# Open a session.
 				def session(&block)
-					@controller.acquire do |driver|
-						driver.session
-					end
+					payload = @controller.acquire
 					
-					session = ReusableSession.open(@bridge.endpoint, reply["sessionId"], reply["capabilities"])
+					session = CachedWrapper.open(reply[:endpoint], reply["sessionId"], reply["capabilities"], pool: self, payload: payload)
 					
 					return session unless block_given?
 					
@@ -96,9 +112,7 @@ module Async
 				def reuse(session)
 					session.reset!
 					
-					@controller.
-					
-					@sessions << {"sessionId" => session.id, "capabilities" => session.capabilities}
+					@controller.release(session.payload)
 					
 					return true
 				end

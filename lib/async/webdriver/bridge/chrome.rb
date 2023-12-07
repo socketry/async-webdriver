@@ -42,7 +42,7 @@ module Async
 					# @returns [Array(String)] The arguments to pass to the `chromedriver` executable.
 					def arguments(**options)
 						[
-							options.fetch(:path, "chromedriver")
+							options.fetch(:path, "chromedriver"),
 							"--port=#{options[:port]}",
 						].compact
 					end

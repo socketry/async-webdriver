@@ -59,7 +59,7 @@ module Async
 				end
 				
 				def client
-					Client.open(@endpoint)
+					Client.open(self.endpoint)
 				end
 				
 				# Start the driver.
