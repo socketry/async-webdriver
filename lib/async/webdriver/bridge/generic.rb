@@ -12,22 +12,9 @@ module Async
 		module Bridge
 			# Generic W3C WebDriver implementation.
 			class Generic
-				# Start the driver and return a new instance.
-				def self.start(**options)
-					self.new(**options).tap do |bridge|
-						bridge.start
-					end
+				def initialize(**options)
+					@options = options
 				end
-				
-				# Initialize the driver.
-				# @parameter port [Integer] The port to listen on.
-				def initialize(port: nil)
-					@port = port
-					@status = nil
-				end
-				
-				# @attribute [String] The status of the driver after a connection has been established.
-				attr :status
 				
 				# @returns [String | Nil] The version of the driver.
 				def version
@@ -37,53 +24,6 @@ module Async
 				# @returns [Boolean] Is the driver supported/working?
 				def supported?
 					version != nil
-				end
-				
-				# Start the driver.
-				# @parameter retries [Integer] The number of times to retry before giving up.
-				def start(retries: 100)
-					Console.debug(self, "Waiting for driver to start...")
-					count = 0
-					
-					Async::HTTP::Client.open(endpoint) do |client|
-						begin
-							response = client.get("/status")
-							@status = JSON.parse(response.read)["value"]
-							Console.debug(self, "Successfully connected to driver.", status: @status)
-						rescue Errno::ECONNREFUSED
-							if count < retries
-								count += 1
-								sleep(0.001 * count)
-								Console.debug(self, "Driver not ready, retrying...")
-								retry
-							else
-								raise
-							end
-						end
-					end
-				end
-				
-				# Close the driver and any associated resources.
-				def close
-				end
-				
-				# Generate a port number for the driver to listen on if it was not specified.
-				# @returns [Integer] The port the driver is listening on.
-				def port
-					unless @port
-						address = ::Addrinfo.tcp("localhost", 0)
-						address.bind do |socket|
-							# We assume that it's unlikely the port will be reused any time soon...
-							@port = socket.local_address.ip_port
-						end
-					end
-					
-					return @port
-				end
-				
-				# @returns [Async::HTTP::Endpoint] The endpoint the driver is listening on.
-				def endpoint
-					Async::HTTP::Endpoint.parse("http://localhost:#{port}")
 				end
 			end
 		end
