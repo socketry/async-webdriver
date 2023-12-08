@@ -11,9 +11,11 @@ require 'async/webdriver/bridge'
 ABridge = Sus::Shared("a bridge") do
 	include Sus::Fixtures::Async::ReactorContext
 	
-	with "#status" do
-		it "is ready" do
-			expect(bridge.status).to have_keys("ready" => be == true)
+	with "a driver" do
+		with "#status" do
+			it "should be ready" do
+				expect(driver.status).to have_keys("ready" => be == true)
+			end
 		end
 	end
 end
@@ -23,11 +25,15 @@ Async::WebDriver::Bridge.each do |klass|
 	
 	describe(klass, unique: name) do
 		def bridge
-			@bridge ||= subject.start
+			@bridge ||= subject.new
+		end
+		
+		def driver
+			@driver ||= bridge.start
 		end
 		
 		def after
-			@bridge&.close
+			@driver&.close
 			super
 		end
 		

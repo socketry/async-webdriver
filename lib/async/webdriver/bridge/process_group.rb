@@ -3,6 +3,8 @@
 # Released under the MIT License.
 # Copyright, 2023, by Samuel Williams.
 
+require_relative 'driver'
+
 module Async
 	module WebDriver
 		module Bridge
@@ -70,6 +72,23 @@ module Async
 					end
 				rescue Errno::ECHILD
 					# Done.
+				end
+			end
+			
+			class ProcessDriver < Driver
+				def initialize(endpoint, process)
+					super(endpoint)
+					
+					@process = process
+				end
+				
+				def close
+					super
+					
+					if @process
+						@process.close
+						@process = nil
+					end
 				end
 			end
 		end

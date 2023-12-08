@@ -20,51 +20,52 @@ module Async
 			# end
 			# ```
 			class Chrome < Generic
-				# Create a new bridge to Chrome.
-				# @parameter path [String] The path to the `chromedriver` executable.
-				def initialize(path: "chromedriver")
-					super()
-					
-					@path = path
-					@process = nil
+				def path
+					@options.fetch(:path, "chromedriver")
 				end
 				
 				# @returns [String] The version of the `chromedriver` executable.
 				def version
-					::IO.popen([@path, "--version"]) do |io|
+					::IO.popen([self.path, "--version"]) do |io|
 						return io.read
 					end
 				rescue Errno::ENOENT
 					return nil
 				end
 				
-				# Unlimited concurrency.
-				def concurrency
-					true
-				end
-				
-				# @returns [Array(String)] The arguments to pass to the `chromedriver` executable.
-				def arguments
-					[
-						"--port=#{self.port}",
-					].compact
+				class Driver < Bridge::Driver
+					def initialize(**options)
+						super(**options)
+						@process_group = nil
+					end
+					
+					# @returns [Array(String)] The arguments to pass to the `chromedriver` executable.
+					def arguments(**options)
+						[
+							options.fetch(:path, "chromedriver"),
+							"--port=#{self.port}",
+						].compact
+					end
+					
+					def start
+						@process_group = ProcessGroup.spawn(*arguments(**@options))
+						
+						super
+					end
+					
+					def close
+						if @process_group
+							@process_group.close
+							@process_group = nil
+						end
+						
+						super
+					end
 				end
 				
 				# Start the driver.
-				def start
-					@process ||= ProcessGroup.spawn(@path, *arguments)
-					
-					super
-				end
-				
-				# Close the driver.
-				def close
-					super
-					
-					if @process
-						@process.close
-						@process = nil
-					end
+				def start(**options)
+					Driver.new(**options).tap(&:start)
 				end
 				
 				# The default capabilities for the Chrome browser which need to be provided when requesting a new session.
@@ -76,7 +77,8 @@ module Async
 							browserName: "chrome",
 							"goog:chromeOptions": {
 								args: [headless ? "--headless" : nil].compact,
-							}
+							},
+							webSocketUrl: true,
 						},
 					}
 				end

@@ -7,13 +7,11 @@ require 'sus/fixtures/async/reactor_context'
 require 'sus/fixtures/async/http/server_context'
 
 require 'async/webdriver'
+require 'pool_context'
 
 ASession = Sus::Shared("a session") do
 	include Sus::Fixtures::Async::ReactorContext
 	include Sus::Fixtures::Async::HTTP::ServerContext
-	
-	let(:webdriver_client) {Async::WebDriver::Client.open(bridge.endpoint)}
-	let(:session) {webdriver_client.session(bridge.default_capabilities)}
 	
 	it "should have a session" do
 		expect(session).to be_a(Async::WebDriver::Session)
@@ -43,16 +41,10 @@ end
 
 Async::WebDriver::Bridge.each do |klass|
 	name = klass.name.split("::").last
+	pool = Async::WebDriver::Bridge::Pool.new(klass.new)
 	
 	describe(klass, unique: name) do
-		def bridge
-			@bridge ||= subject.start
-		end
-		
-		def after
-			@bridge&.close
-			super
-		end
+		include PoolContext
 		
 		it_behaves_like ASession
 	end

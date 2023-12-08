@@ -30,8 +30,9 @@ module Async
 			# @returns [Session] The session if no block is given.
 			def self.open(endpoint, *arguments, **options)
 				client = self.new(
-					Async::HTTP::Client.open(endpoint, **options),
-					*arguments
+					Async::HTTP::Client.open(endpoint),
+					*arguments,
+					**options
 				)
 				
 				return client unless block_given?
@@ -47,10 +48,12 @@ module Async
 			# @parameter delegate [Protocol::HTTP::Middleware] The underlying HTTP client (or wrapper).
 			# @parameter id [String] The session identifier.
 			# @parameter capabilities [Hash] The capabilities of the session.
-			def initialize(delegate, id, capabilities)
+			def initialize(delegate, id, capabilities, **options)
 				@delegate = delegate
 				@id = id
 				@capabilities = capabilities
+				
+				@options = options
 			end
 			
 			def inspect

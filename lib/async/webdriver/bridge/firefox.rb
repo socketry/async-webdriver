@@ -19,51 +19,56 @@ module Async
 			# 	bridge&.close
 			# end
 			class Firefox < Generic
-				# Create a new bridge to Firefox.
-				# @parameter path [String] The path to the `geckodriver` executable.
-				def initialize(path: "geckodriver")
-					super()
-					
-					@path = path
-					@process = nil
+				def path
+					@options.fetch(:path, "geckodriver")
 				end
 				
 				# @returns [String] The version of the `geckodriver` executable.
 				def version
-					::IO.popen([@path, "--version"]) do |io|
+					::IO.popen([self.path, "--version"]) do |io|
 						return io.read
 					end
 				rescue Errno::ENOENT
 					return nil
 				end
 				
-				# Limited concurrency.
-				def concurrency
-					1
-				end
-				
-				# @returns [Array(String)] The arguments to pass to the `geckodriver` executable.
-				def arguments
-					[
-						"--port", self.port.to_s,
-					].compact
+				class Driver < Bridge::Driver
+					def initialize(**options)
+						super(**options)
+						@process_group = nil
+					end
+					
+					def concurrency
+						1
+					end
+					
+					# @returns [Array(String)] The arguments to pass to the `chromedriver` executable.
+					def arguments(**options)
+						[
+							options.fetch(:path, "geckodriver"),
+							"--port", self.port.to_s,
+						].compact
+					end
+					
+					def start
+						@process_group = ProcessGroup.spawn(*arguments(**@options))
+						
+						super
+					end
+					
+					def close
+						if @process_group
+							@process_group.close
+							@process_group = nil
+						end
+						
+						super
+					end
 				end
 				
 				# Start the driver.
-				def start
-					@process ||= ProcessGroup.spawn(@path, *arguments)
-					
-					super
-				end
-				
-				# Close the driver.
-				def close
-					super
-					
-					if @process
-						@process.close
-						@process = nil
-					end
+				def start(**options)
+					Driver.new(**options).tap(&:start)
 				end
 				
 				# The default capabilities for the Firefox browser which need to be provided when requesting a new session.
@@ -74,7 +79,7 @@ module Async
 						alwaysMatch: {
 							browserName: "firefox",
 							"moz:firefoxOptions": {
-								"args": [headless ? "-headless" : nil].compact,
+								args: [headless ? "-headless" : nil].compact,
 							}
 						}
 					}
