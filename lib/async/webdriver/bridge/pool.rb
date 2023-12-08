@@ -26,45 +26,91 @@ module Async
 					def initialize(bridge, capabilities: bridge.default_capabilities)
 						@bridge = bridge
 						@capabilities = capabilities
-						@pool = Async::Pool::Controller.new(@bridge.method(:start))
+						@pool = Async::Pool::Controller.new(self)
+					end
+					
+					class SessionCache
+						def initialize(driver, capabilities)
+							@driver = driver
+							@capabilities = capabilities
+							
+							@client = driver.client
+							@sessions = []
+						end
 						
-						# This is a buffer of sessions that have been released but not yet reused.
-						@sessions = []
+						def viable?
+							@driver&.viable?
+						end
+						
+						def reusable?
+							@driver&.reusable?
+						end
+						
+						def close
+							if @driver
+								@driver.close
+								@driver = nil
+							end
+							
+							if @client
+								@client.close
+								@client = nil
+							end
+							
+							if @sessions
+								@sessions = nil
+							end
+						end
+						
+						def concurrency
+							@driver.concurrency
+						end
+						
+						def acquire
+							if @sessions.empty?
+								session = @client.post("session", {capabilities: @capabilities})
+								session[:cache] = self
+								session[:endpoint] = @driver.endpoint
+								
+								return session
+							else
+								return @sessions.pop
+							end
+						end
+						
+						def release(session)
+							@sessions.push(session)
+						end
+					end
+					
+					# Constructor for the pool.
+					def call
+						SessionCache.new(@bridge.start, @capabilities)
 					end
 					
 					def acquire
-						if @sessions.empty?
-							driver = @pool.acquire
-							client = driver.client
-							
-							session = client.post("session", {capabilities: @capabilities})
-							
-							# This is not thread safe and is just an opaque token for later releasing the session.
-							session[:driver] = driver
-							session[:endpoint] = driver.endpoint
-							
-							return session
-						else
-							return @sessions.pop
-						end
+						session_cache = @pool.acquire
+						
+						return session_cache.acquire
 					end
 					
 					def release(session)
-						@sessions.push(session)
+						session_cache = session[:cache]
+						
+						session_cache.release(session)
+						
+						@pool.release(session_cache)
 					end
 					
 					def retire(session)
-						@pool.retire(session[:driver])
+						session_cache = session[:cache]
+						
+						session_cache.release(session)
+						
+						@pool.retire(session_cache)
 					end
 					
 					def close
-						if @sessions
-							@sessions.each do |session|
-								retire(session)
-							end
-							@sessions = nil
-						end
-						
 						if @pool
 							@pool.close
 							@pool = nil

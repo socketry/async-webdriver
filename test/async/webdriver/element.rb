@@ -7,6 +7,7 @@ require 'sus/fixtures/async/reactor_context'
 require 'sus/fixtures/async/http/server_context'
 
 require 'async/webdriver'
+require 'pool_context'
 
 AnElement = Sus::Shared("an element") do
 	include Sus::Fixtures::Async::ReactorContext
@@ -215,16 +216,7 @@ Async::WebDriver::Bridge.each do |klass|
 	pool = Async::WebDriver::Bridge::Pool.new(klass.new)
 	
 	describe(klass, unique: name) do
-		let(:pool) {pool}
-		
-		def session
-			@session ||= pool.session
-		end
-		
-		def after
-			@session&.close
-			super
-		end
+		include PoolContext
 		
 		it_behaves_like AnElement
 	end
