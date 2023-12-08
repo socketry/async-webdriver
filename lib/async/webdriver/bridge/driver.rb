@@ -65,7 +65,9 @@ module Async
 				# Start the driver.
 				# @parameter retries [Integer] The number of times to retry before giving up.
 				def start(retries: 100)
-					Console.debug(self, "Waiting for driver to start...")
+					endpoint = self.endpoint
+					
+					Console.debug(self, "Waiting for driver to start...", endpoint: endpoint)
 					count = 0
 					
 					Async::HTTP::Client.open(endpoint) do |client|
@@ -76,7 +78,7 @@ module Async
 						rescue Errno::ECONNREFUSED
 							if count < retries
 								count += 1
-								sleep(0.001 * count)
+								sleep(0.01 * count)
 								Console.debug(self, "Driver not ready, retrying...")
 								retry
 							else

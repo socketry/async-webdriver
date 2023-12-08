@@ -43,7 +43,7 @@ module Async
 					def arguments(**options)
 						[
 							options.fetch(:path, "chromedriver"),
-							"--port=#{options[:port]}",
+							"--port=#{self.port}",
 						].compact
 					end
 					

@@ -12,7 +12,7 @@ AnElement = Sus::Shared("an element") do
 	include Sus::Fixtures::Async::ReactorContext
 	include Sus::Fixtures::Async::HTTP::ServerContext
 	
-	let(:webdriver_client) {Async::WebDriver::Client.open(bridge.endpoint)}
+	let(:webdriver_client) {Async::WebDriver::Client.open(driver.endpoint)}
 	let(:session) {webdriver_client.session(bridge.default_capabilities)}
 	
 	let(:app) do
@@ -218,11 +218,15 @@ Async::WebDriver::Bridge.each do |klass|
 	
 	describe(klass, unique: name) do
 		def bridge
-			@bridge ||= subject.start
+			@bridge ||= subject.new
+		end
+		
+		def driver
+			@driver ||= bridge.start
 		end
 		
 		def after
-			@bridge&.close
+			@driver&.close
 			super
 		end
 		
