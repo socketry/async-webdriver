@@ -34,7 +34,7 @@ module Async
 					
 					def acquire
 						if @sessions.empty?
-							driver = self.acquire
+							driver = @pool.acquire
 							client = driver.client
 							
 							session = client.post("session", {capabilities: @capabilities})
@@ -58,19 +58,24 @@ module Async
 					end
 					
 					def close
+						if @sessions
+							@sessions.each do |session|
+								retire(session)
+							end
+							@sessions = nil
+						end
+						
 						if @pool
 							@pool.close
 							@pool = nil
 						end
-						
-						@sessions = nil
 					end
 				end
 				
 				# Initialize the session pool.
 				# @parameter bridge [Bridge] The bridge to use to create sessions.
-				def initialize(bridge, **options)
-					@controller = Async::Actor.new(BridgeController.new(bridge, **options))
+				def initialize(...)
+					@controller = Async::Actor.new(BridgeController.new(...))
 				end
 				
 				# Close the session pool.
@@ -98,7 +103,7 @@ module Async
 				def session(&block)
 					payload = @controller.acquire
 					
-					session = CachedWrapper.open(reply[:endpoint], reply["sessionId"], reply["capabilities"], pool: self, payload: payload)
+					session = CachedWrapper.open(payload[:endpoint], payload["sessionId"], payload["capabilities"], pool: self, payload: payload)
 					
 					return session unless block_given?
 					

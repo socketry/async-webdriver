@@ -15,7 +15,7 @@ module Async
 				end
 				
 				def concurrency
-					@options.fetch(:concurrency, nil)
+					@options.fetch(:concurrency, 128)
 				end
 				
 				attr :count
