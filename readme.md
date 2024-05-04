@@ -22,7 +22,7 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
 ## See Also
 
-  - [sus-fixtures-async-webdriver](https://github.com/socketry/sus-fixtures-async-webdriver) - STandard fixtures for testing web applications with `async-webdriver`.
+  - [sus-fixtures-async-webdriver](https://github.com/socketry/sus-fixtures-async-webdriver) - Standard fixtures for testing web applications with `async-webdriver`.
 
 ## Contributing
 
