@@ -13,19 +13,20 @@ Gem::Specification.new do |spec|
 	spec.cert_chain  = ['release.cert']
 	spec.signing_key = File.expand_path('~/.gem/release.pem')
 	
-	spec.homepage = "https://github.com/socketry/async-webdriver/"
+	spec.homepage = "https://github.com/socketry/async-webdriver"
 	
 	spec.metadata = {
 		"documentation_uri" => "https://socketry.github.io/async-webdriver/",
 		"funding_uri" => "https://github.com/sponsors/ioquatix",
+		"source_code_uri" => "https://github.com/socketry/async-webdriver.git",
 	}
 	
 	spec.files = Dir.glob(['{lib}/**/*', '*.md'], File::FNM_DOTMATCH, base: __dir__)
 	
-	spec.required_ruby_version = ">= 3.0"
+	spec.required_ruby_version = ">= 3.1"
 	
-	spec.add_dependency "async-http", "~> 0.61"
-	spec.add_dependency "async-websocket", "~> 0.25"
 	spec.add_dependency "async-actor", "~> 0.1"
+	spec.add_dependency "async-http", "~> 0.61"
 	spec.add_dependency "async-pool", "~> 0.4"
+	spec.add_dependency "async-websocket", "~> 0.25"
 end

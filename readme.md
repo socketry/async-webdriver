@@ -20,7 +20,7 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
 ## See Also
 
-- [sus-fixtures-async-webdriver](https://github.com/socketry/sus-fixtures-async-webdriver) - STandard fixtures for testing web applications with `async-webdriver`.
+  - [sus-fixtures-async-webdriver](https://github.com/socketry/sus-fixtures-async-webdriver) - STandard fixtures for testing web applications with `async-webdriver`.
 
 ## Contributing
 
@@ -38,4 +38,4 @@ This project uses the [Developer Certificate of Origin](https://developercertifi
 
 ### Contributor Covenant
 
-This project is governed by [Contributor Covenant](https://www.contributor-covenant.org/). All contributors and participants agree to abide by its terms.
+This project is governed by the [Contributor Covenant](https://www.contributor-covenant.org/). All contributors and participants agree to abide by its terms.
