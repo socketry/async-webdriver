@@ -18,6 +18,10 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
   - [GitHub Actions Integrations](https://socketry.github.io/async-webdriver/guides/github-actions-integration/index) - This guide explains how to use `async-webdriver` with GitHub Actions.
 
+## See Also
+
+- [sus-fixtures-async-webdriver](https://github.com/socketry/sus-fixtures-async-webdriver) - STandard fixtures for testing web applications with `async-webdriver`.
+
 ## Contributing
 
 We welcome contributions to this project.
