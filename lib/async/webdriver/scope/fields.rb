@@ -3,8 +3,6 @@
 # Released under the MIT License.
 # Copyright, 2023, by Samuel Williams.
 
-require 'base64'
-
 require_relative '../xpath'
 
 module Async

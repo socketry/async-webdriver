@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
 	spec.add_dependency "async-http", "~> 0.61"
 	spec.add_dependency "async-pool", "~> 0.4"
 	spec.add_dependency "async-websocket", "~> 0.25"
+	spec.add_dependency "base64", "~> 0.2"
 end
