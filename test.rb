@@ -20,12 +20,12 @@ Async do
 		server.run
 	end
 	
-	bridge = Async::WebDriver::Bridge::Chrome.new
+	bridge = Async::WebDriver::Bridge.default
 	Console.info("Starting driver process...")
-	bridge.start
+	driver = bridge.start
 	
-	8.times do
-		Async::WebDriver::Client.open(bridge.endpoint) do |client|
+	1.times do
+		Async::WebDriver::Client.open(driver.endpoint) do |client|
 			Console.info("Creating session...")
 			client.session(bridge.default_capabilities) do |session|
 				binding.irb
@@ -33,6 +33,6 @@ Async do
 		end
 	end
 ensure
-	bridge&.close
+	driver&.close
 	server_task&.stop
 end
