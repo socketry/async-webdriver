@@ -5,6 +5,7 @@
 
 require_relative 'bridge/chrome'
 require_relative 'bridge/firefox'
+require_relative 'bridge/safari'
 
 require_relative 'error'
 
@@ -17,6 +18,7 @@ module Async
 			ALL = [
 				Bridge::Chrome,
 				Bridge::Firefox,
+				Bridge::Safari,
 			]
 			
 			def self.each(&block)
