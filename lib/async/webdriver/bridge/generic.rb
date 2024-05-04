@@ -29,6 +29,10 @@ module Async
 				def supported?
 					version != nil
 				end
+				
+				def headless?
+					@options.fetch(:headless, true)
+				end
 			end
 		end
 	end

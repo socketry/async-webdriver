@@ -36,16 +36,27 @@ module Async
 			# ```
 			ASYNC_WEBDRIVER_BRIDGE = 'ASYNC_WEBDRIVER_BRIDGE'
 			
+			# The environment variable used to disable headless mode.
+			#
+			# ```
+			# ASYNC_WEBDRIVER_BRIDGE_HEADLESS=false
+			# ```
+			ASYNC_WEBDRIVER_BRIDGE_HEADLESS = 'ASYNC_WEBDRIVER_BRIDGE_HEADLESS'
+			
 			class UnsupportedError < Error
 			end
 			
 			# @returns [Bridge] The default bridge to use.
-			def self.default(env = ENV)
+			def self.default(env = ENV, **options)
+				if env[ASYNC_WEBDRIVER_BRIDGE_HEADLESS] == "false"
+					options[:headless] = false
+				end
+				
 				if name = env[ASYNC_WEBDRIVER_BRIDGE]
-					self.const_get(name).new
+					self.const_get(name).mew(**options)
 				else
 					ALL.each do |klass|
-						instance = klass.new
+						instance = klass.new(**options)
 						return instance if instance.supported?
 					end
 					

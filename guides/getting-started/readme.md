@@ -47,6 +47,14 @@ ensure
 end
 ~~~
 
-### Integration vs Unit Testing
+## Integration vs Unit Testing
 
 `async-webdriver` is designed for integration testing. It is not designed for unit testing (e.g. wrapping a tool like `rack-test` as `capybara` can do). It is designed for testing your application in a real browser and web server. It is designed for testing your application in the same way that a real user would use it. Unfortunately, this style of integration testing is significantly slower than unit testing, but it is also significantly more representative of how your application will behave in production. There are other tools, e.g. [rack-test](https://github.com/rack/rack-test) which provide significantly faster unit testing, but they do not test how your application will behave in an actual web browser. A comprehensive test suite should include both unit tests and integration tests.
+
+### Headless Mode
+
+During testing, often you will want to see the real browser window to determine if the test is working correctly. By default, for performance reasons, `async-webdriver` will run the browser in headless mode. This means that the browser will not be visible on the screen. If you want to see the browser window, you can disable headless mode by setting the `headless` option to `false`:
+
+~~~ shell
+$ ASYNC_WEBDRIVER_BRIDGE_HEADLESS=false ./webdriver-script.rb
+~~~

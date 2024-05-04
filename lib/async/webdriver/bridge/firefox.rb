@@ -74,7 +74,7 @@ module Async
 				# The default capabilities for the Firefox browser which need to be provided when requesting a new session.
 				# @parameter headless [Boolean] Whether to run the browser in headless mode.
 				# @returns [Hash] The default capabilities for the Firefox browser.
-				def default_capabilities(headless: true)
+				def default_capabilities(headless: self.headless?)
 					{
 						alwaysMatch: {
 							browserName: "firefox",
