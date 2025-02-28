@@ -34,7 +34,7 @@ module PoolContext
 		@session ||= pool.session
 	end
 	
-	def after
+	def after(error = nil)
 		@session&.close
 		super
 	end

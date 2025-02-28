@@ -32,7 +32,7 @@ Async::WebDriver::Bridge.each do |klass|
 			@driver ||= bridge.start
 		end
 		
-		def after
+		def after(error = nil)
 			@driver&.close
 			super
 		end
