@@ -4,35 +4,22 @@
 # Released under the MIT License.
 # Copyright, 2023-2025, by Samuel Williams.
 
-require "async/http/server"
-require_relative "lib/async/webdriver"
-
-APPLICATION_PORT = 9090
+require 'async/webdriver'
 
 Async do
-	Console.info("Starting application server...")
-	application_endpoint = Async::HTTP::Endpoint.parse("http://localhost:#{APPLICATION_PORT}")
-	server_task = Async(transient: true) do
-		server = Async::HTTP::Server.for(application_endpoint) do |request|
-			Protocol::HTTP::Response[200, {}, ["Hello World"]]
-		end
-		
-		server.run
-	end
+	bridge = Async::WebDriver::Bridge::Pool.new(Async::WebDriver::Bridge::Chrome.new(headless: false))
 	
-	bridge = Async::WebDriver::Bridge.default
-	Console.info("Starting driver process...")
-	driver = bridge.start
+	session = bridge.session
+	# Set the implicit wait timeout to 10 seconds since we are dealing with the real internet (which can be slow):
+	session.implicit_wait_timeout = 10_000
 	
-	1.times do
-		Async::WebDriver::Client.open(driver.endpoint) do |client|
-			Console.info("Creating session...")
-			client.session(bridge.default_capabilities) do |session|
-				binding.irb
-			end
-		end
-	end
+	session.visit('https://google.com')
+	
+	session.fill_in('q', 'async-webdriver')
+	session.click_button("I'm Feeling Lucky")
+	
+	puts session.document_title
 ensure
-	driver&.close
-	server_task&.stop
+	session&.close
+	bridge&.close
 end

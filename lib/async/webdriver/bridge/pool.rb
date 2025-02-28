@@ -15,8 +15,10 @@ module Async
 			#
 			# ``` ruby
 			# begin
-			# 	bridge = Async::WebDriver::Bridge::Pool.start(Async::WebDriver::Bridge::Chrome.new)
+			# 	bridge = Async::WebDriver::Bridge::Pool.new(Async::WebDriver::Bridge::Chrome.new)
 			# 	session = bridge.session
+			#   # ...
+			#   session.close
 			# ensure
 			# 	bridge&.close
 			# end

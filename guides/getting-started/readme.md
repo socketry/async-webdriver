@@ -27,8 +27,10 @@ The following example shows how to use `async-webdriver` to open a browser, navi
 require 'async/webdriver'
 
 Async do
-	bridge = Async::WebDriver::Bridge::Chrome.start
-	client = Async::WebDriver::Client.open(bridge.endpoint)
+	bridge = Async::WebDriver::Bridge::Chrome.new(headless: false)
+	
+	driver = bridge.start
+	client = Async::WebDriver::Client.open(driver.endpoint)
 	
 	session = client.session(bridge.default_capabilities)
 	# Set the implicit wait timeout to 10 seconds since we are dealing with the real internet (which can be slow):
@@ -43,9 +45,37 @@ Async do
 ensure
 	session&.close
 	client&.close
+	driver&.close
+end
+~~~
+
+### Using a Pool to Manage Sessions
+
+If you are running multiple tests in parallel, you may want to use a session pool to manage the sessions. This can be done as follows:
+
+~~~ ruby
+require 'async/webdriver'
+
+Async do
+	bridge = Async::WebDriver::Bridge::Pool.new(Async::WebDriver::Bridge::Chrome.new(headless: false))
+	
+	session = bridge.session
+	# Set the implicit wait timeout to 10 seconds since we are dealing with the real internet (which can be slow):
+	session.implicit_wait_timeout = 10_000
+	
+	session.visit('https://google.com')
+	
+	session.fill_in('q', 'async-webdriver')
+	session.click_button("I'm Feeling Lucky")
+	
+	puts session.document_title
+ensure
+	session&.close
 	bridge&.close
 end
 ~~~
+
+The sessions will be cached and reused if possible.
 
 ## Integration vs Unit Testing
 

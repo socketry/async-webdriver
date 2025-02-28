@@ -12,10 +12,6 @@ module Async
 		module Bridge
 			# Generic W3C WebDriver implementation.
 			class Generic
-				def self.start(**options)
-					self.new(**options).start
-				end
-				
 				def initialize(**options)
 					@options = options
 				end

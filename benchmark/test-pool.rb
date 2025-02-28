@@ -23,9 +23,6 @@ Async do
 	bridge = Async::WebDriver::Bridge::Chrome.new
 	pool = Async::WebDriver::Bridge::Pool.new(bridge)
 	
-	Console.info("Starting driver process...")
-	pool.start
-	
 	8.times do
 		pool.session do |session|
 			8.times do
