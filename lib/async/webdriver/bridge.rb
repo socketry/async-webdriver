@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023-2024, by Samuel Williams.
+# Copyright, 2023-2025, by Samuel Williams.
 
-require_relative 'bridge/chrome'
-require_relative 'bridge/firefox'
-require_relative 'bridge/safari'
+require_relative "bridge/chrome"
+require_relative "bridge/firefox"
+require_relative "bridge/safari"
 
-require_relative 'error'
+require_relative "error"
 
 module Async
 	module WebDriver
@@ -36,14 +36,14 @@ module Async
 			# ASYNC_WEBDRIVER_BRIDGE=Chrome
 			# ASYNC_WEBDRIVER_BRIDGE=Firefox
 			# ```
-			ASYNC_WEBDRIVER_BRIDGE = 'ASYNC_WEBDRIVER_BRIDGE'
+			ASYNC_WEBDRIVER_BRIDGE = "ASYNC_WEBDRIVER_BRIDGE"
 			
 			# The environment variable used to disable headless mode.
 			#
 			# ```
 			# ASYNC_WEBDRIVER_BRIDGE_HEADLESS=false
 			# ```
-			ASYNC_WEBDRIVER_BRIDGE_HEADLESS = 'ASYNC_WEBDRIVER_BRIDGE_HEADLESS'
+			ASYNC_WEBDRIVER_BRIDGE_HEADLESS = "ASYNC_WEBDRIVER_BRIDGE_HEADLESS"
 			
 			class UnsupportedError < Error
 			end

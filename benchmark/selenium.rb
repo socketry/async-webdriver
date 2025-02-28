@@ -2,11 +2,11 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023, by Samuel Williams.
+# Copyright, 2023-2025, by Samuel Williams.
 
-require 'async'
-require 'async/http'
-require 'selenium/webdriver'
+require "async"
+require "async/http"
+require "selenium/webdriver"
 
 APPLICATION_PORT = 9090
 WEB_DRIVER_PORT = 4040

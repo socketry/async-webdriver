@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023, by Samuel Williams.
+# Copyright, 2023-2025, by Samuel Williams.
 
-require 'sus/fixtures/async/reactor_context'
-require 'sus/fixtures/async/http/server_context'
+require "sus/fixtures/async/reactor_context"
+require "sus/fixtures/async/http/server_context"
 
-require 'async/webdriver'
-require 'pool_context'
+require "async/webdriver"
+require "pool_context"
 
 AnElement = Sus::Shared("an element") do
 	include Sus::Fixtures::Async::ReactorContext
@@ -32,7 +32,7 @@ AnElement = Sus::Shared("an element") do
 		end
 	end
 	
-	with '#attributes' do
+	with "#attributes" do
 		it "should return attributes" do
 			session.visit(bound_url)
 			

@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023, by Samuel Williams.
+# Copyright, 2023-2025, by Samuel Williams.
 
-require 'async/actor'
-require 'async/pool'
+require "async/actor"
+require "async/pool"
 
-require_relative '../session'
+require_relative "../session"
 
 module Async
 	module WebDriver

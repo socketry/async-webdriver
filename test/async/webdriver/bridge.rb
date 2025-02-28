@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023, by Samuel Williams.
+# Copyright, 2023-2025, by Samuel Williams.
 
-require 'sus/fixtures/async/reactor_context'
+require "sus/fixtures/async/reactor_context"
 
-require 'async/webdriver/session'
-require 'async/webdriver/bridge'
+require "async/webdriver/session"
+require "async/webdriver/bridge"
 
 ABridge = Sus::Shared("a bridge") do
 	include Sus::Fixtures::Async::ReactorContext
