@@ -36,6 +36,10 @@ module PoolContext
 	
 	def after(error = nil)
 		@session&.close
+		
+		# Force close all the pools so we can start fresh next time (slow):
+		# CACHE.close
+		
 		super
 	end
 end
