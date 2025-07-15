@@ -32,7 +32,12 @@ module Async
 						element.clear
 					end
 					
-					element.send_keys(value)
+					if element.tag_name == "select"
+						option = element.find_element_by_xpath(".//option[text()=#{XPath::escape(value)}]")
+						option.click unless option.selected?
+					else
+						element.send_keys(value)
+					end
 				end
 				
 				# Click a button with the given label.
