@@ -22,7 +22,12 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
 ## Releases
 
-There are no documented releases.
+Please see the [project releases](https://socketry.github.io/async-webdriver/releases/index) for all releases.
+
+### v0.8.0
+
+  - Fix `fill_in` `<select>` on Safari.
+  - `Element#tag_name` now normalizes the tag name to lowercase (Safari returns uppercase while other browsers return lowercase).
 
 ## See Also
 
