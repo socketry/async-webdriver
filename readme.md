@@ -20,6 +20,10 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
   - [Sus Integration](https://socketry.github.io/async-webdriver/guides/sus-integration/index) - This guide will show you how to integrate `async-webdriver` with the sus test framework.
 
+## Releases
+
+There are no documented releases.
+
 ## See Also
 
   - [sus-fixtures-async-webdriver](https://github.com/socketry/sus-fixtures-async-webdriver) - Standard fixtures for testing web applications with `async-webdriver`.
