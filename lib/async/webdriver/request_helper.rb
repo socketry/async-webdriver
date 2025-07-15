@@ -46,10 +46,10 @@ module Async
 			# @returns [Object] The unwrapped value.
 			def unwrap_object(value)
 				if value.is_a?(Hash) and value.key?(ELEMENT_KEY)
-					Element.new(self.session, value[ELEMENT_KEY])
-				else
-					value
+					value = Element.new(self.session, value[ELEMENT_KEY])
 				end
+				
+				return value
 			end
 			
 			# Used by `JSON.load` to unwrap objects.
@@ -60,6 +60,8 @@ module Async
 				when Array
 					value.map!(&method(:unwrap_object))
 				end
+				
+				return value
 			end
 			
 			# Extract the value from the reply.

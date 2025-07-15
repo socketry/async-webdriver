@@ -71,6 +71,11 @@ module Async
 						def acquire
 							if @sessions.empty?
 								session = @client.post("session", {capabilities: @capabilities})
+								
+								if session.nil?
+									raise Async::WebDriver::Error, "Failed to create session with capabilities: #{@capabilities.inspect}"
+								end
+								
 								session[:cache] = self
 								session[:endpoint] = @driver.endpoint
 								
