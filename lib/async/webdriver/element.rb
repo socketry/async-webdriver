@@ -211,9 +211,9 @@ module Async
 			# element.tagName
 			# ```
 			#
-			# @returns [String] The tag name of the element.
+			# @returns [String] The tag name of the element, always in lowercase for consistency across browsers.
 			def tag_name
-				get("name")
+				get("name").downcase
 			end
 			
 			# A struct representing the size of an element.
