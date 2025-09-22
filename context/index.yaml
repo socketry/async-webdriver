@@ -1,0 +1,24 @@
+# Automatically generated context index for Utopia::Project guides.
+# Do not edit then files in this directory directly, instead edit the guides and then run `bake utopia:project:agent:context:update`.
+---
+description: A native library implementing the W3C WebDriver client specification.
+metadata:
+  documentation_uri: https://socketry.github.io/async-webdriver/
+  funding_uri: https://github.com/sponsors/ioquatix
+  source_code_uri: https://github.com/socketry/async-webdriver.git
+files:
+- path: getting-started.md
+  title: Getting Started
+  description: This guide explains how to use `async-webdriver` for controlling a
+    browser.
+- path: debugging.md
+  title: Debugging
+  description: This guide explains how to debug WebDriver issues by capturing HTML
+    source and screenshots when tests fail.
+- path: github-actions-integration.md
+  title: GitHub Actions Integrations
+  description: This guide explains how to use `async-webdriver` with GitHub Actions.
+- path: sus-integration.md
+  title: Sus Integration
+  description: This guide will show you how to integrate `async-webdriver` with the
+    sus test framework.

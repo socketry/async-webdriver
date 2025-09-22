@@ -16,6 +16,8 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
   - [Getting Started](https://socketry.github.io/async-webdriver/guides/getting-started/index) - This guide explains how to use `async-webdriver` for controlling a browser.
 
+  - [Debugging](https://socketry.github.io/async-webdriver/guides/debugging/index) - This guide explains how to debug WebDriver issues by capturing HTML source and screenshots when tests fail.
+
   - [GitHub Actions Integrations](https://socketry.github.io/async-webdriver/guides/github-actions-integration/index) - This guide explains how to use `async-webdriver` with GitHub Actions.
 
   - [Sus Integration](https://socketry.github.io/async-webdriver/guides/sus-integration/index) - This guide will show you how to integrate `async-webdriver` with the sus test framework.
@@ -23,6 +25,10 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 ## Releases
 
 Please see the [project releases](https://socketry.github.io/async-webdriver/releases/index) for all releases.
+
+### Unreleased
+
+  - Fix `Scope#screenshot` to use the correct HTTP method (`GET` instead of `POST`).
 
 ### v0.8.0
 

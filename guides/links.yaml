@@ -1,6 +1,8 @@
 getting-started:
   order: 1
-github-actions-integration:
+debugging:
   order: 2
-sus-integration:
+github-actions-integration:
   order: 3
+sus-integration:
+  order: 4
