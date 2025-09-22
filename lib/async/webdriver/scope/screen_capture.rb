@@ -13,7 +13,7 @@ module Async
 				# Take a screenshot of the current page or element.
 				# @returns [String] The screenshot as a Base64 encoded string.
 				def screenshot
-					reply = current_scope.post("screenshot")
+					reply = current_scope.get("screenshot")
 					
 					return Base64.decode64(reply)
 				end

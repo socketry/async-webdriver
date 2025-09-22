@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - Fix `Scope#screenshot` to use the correct HTTP method (`GET` instead of `POST`).
+
 ## v0.8.0
 
   - Fix `fill_in` `<select>` on Safari.
