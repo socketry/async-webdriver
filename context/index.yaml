@@ -15,6 +15,10 @@ files:
   title: Debugging
   description: This guide explains how to debug WebDriver issues by capturing HTML
     source and screenshots when tests fail.
+- path: navigation-timing.md
+  title: Navigation Timing
+  description: This guide explains how to avoid race conditions when triggering navigation
+    operations while browser navigation is already in progress.
 - path: github-actions-integration.md
   title: GitHub Actions Integrations
   description: This guide explains how to use `async-webdriver` with GitHub Actions.

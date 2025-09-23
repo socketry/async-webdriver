@@ -2,7 +2,9 @@ getting-started:
   order: 1
 debugging:
   order: 2
-github-actions-integration:
+navigation-timing:
   order: 3
-sus-integration:
+github-actions-integration:
   order: 4
+sus-integration:
+  order: 5

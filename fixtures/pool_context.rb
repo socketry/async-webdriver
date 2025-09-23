@@ -12,7 +12,9 @@ module PoolContext
 		
 		def pool_for_class(klass)
 			@guard.synchronize do
-				@pools[klass] ||= Async::WebDriver::Bridge::Pool.new(klass.new)
+				@pools[klass] ||= Async::WebDriver::Bridge::Pool.new(klass.new(
+					# headless: false
+				))
 			end
 		end
 		

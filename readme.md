@@ -18,6 +18,8 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
   - [Debugging](https://socketry.github.io/async-webdriver/guides/debugging/index) - This guide explains how to debug WebDriver issues by capturing HTML source and screenshots when tests fail.
 
+  - [Navigation Timing](https://socketry.github.io/async-webdriver/guides/navigation-timing/index) - This guide explains how to avoid race conditions when triggering navigation operations while browser navigation is already in progress.
+
   - [GitHub Actions Integrations](https://socketry.github.io/async-webdriver/guides/github-actions-integration/index) - This guide explains how to use `async-webdriver` with GitHub Actions.
 
   - [Sus Integration](https://socketry.github.io/async-webdriver/guides/sus-integration/index) - This guide will show you how to integrate `async-webdriver` with the sus test framework.
@@ -25,6 +27,10 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 ## Releases
 
 Please see the [project releases](https://socketry.github.io/async-webdriver/releases/index) for all releases.
+
+### Unreleased
+
+  - Introduce `Scope#wait_for_navigation` to properly wait for page navigations to complete.
 
 ### v0.9.0
 
