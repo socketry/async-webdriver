@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.9.0
 
   - Fix `Scope#screenshot` to use the correct HTTP method (`GET` instead of `POST`).
 

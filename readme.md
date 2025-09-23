@@ -26,7 +26,7 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
 Please see the [project releases](https://socketry.github.io/async-webdriver/releases/index) for all releases.
 
-### Unreleased
+### v0.9.0
 
   - Fix `Scope#screenshot` to use the correct HTTP method (`GET` instead of `POST`).
 
