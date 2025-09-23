@@ -80,10 +80,11 @@ NavigationScope = Sus::Shared("navigation scope") do
 		
 		session.click_button("Submit")
 		
-		# Use wait_for_navigation to properly wait for the form submission to complete:
+		# Use wait_for_navigation to properly wait for the form submission to complete and the redirect to occur:
 		session.wait_for_navigation do |current_url|
 			current_url.end_with?("/success")
 		end
+		# If you remove the redirect, the above wait_for_navigation is not needed.
 		
 		# This alone is insufficient, the above wait_for_navigation ensures the page is loaded:
 		session.find_element_by_xpath("//h1[text()='Form Submitted Successfully']")
