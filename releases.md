@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.10.0
 
   - Introduce `Scope#wait_for_navigation` to properly wait for page navigations to complete.
 

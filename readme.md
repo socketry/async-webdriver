@@ -28,7 +28,7 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
 Please see the [project releases](https://socketry.github.io/async-webdriver/releases/index) for all releases.
 
-### Unreleased
+### v0.10.0
 
   - Introduce `Scope#wait_for_navigation` to properly wait for page navigations to complete.
 
