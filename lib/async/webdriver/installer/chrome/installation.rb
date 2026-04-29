@@ -27,26 +27,25 @@ module Async
 					# @parameter state [String] Root of the state directory.
 					# @returns [Installation]
 					def self.install(version, state:)
-						
 						platform = Platform.current
-						info     = Releases.resolve(version, platform)
+						release = Releases.resolve(version, platform)
 						
-						existing = find(info[:version], platform, state: state)
+						existing = find(release[:version], platform, state: state)
 						return existing if existing
 						
-						Console.info(self, "Installing Chrome for Testing #{info[:version]}...", platform: platform)
+						Console.info(self, "Installing Chrome for Testing #{release[:version]}...", platform: platform)
 						
-						dir = installation_dir(info[:version], platform, state: state)
+						dir = installation_dir(release[:version], platform, state: state)
 						FileUtils.mkdir_p(dir)
 						
 						begin
-							download_and_extract(info[:chrome_url],      File.join(dir, "chrome"))
-							download_and_extract(info[:chromedriver_url], File.join(dir, "chromedriver"))
+							download_and_extract(release[:chrome_url], File.join(dir, "chrome"))
+							download_and_extract(release[:chromedriver_url], File.join(dir, "chromedriver"))
 							
-							installation = find(info[:version], platform, state: state) or
+							installation = find(release[:version], platform, state: state) or
 								raise "Installation failed: binaries not found after extraction"
 							
-							Console.info(self, "Installed Chrome for Testing #{info[:version]}.", platform: platform)
+							Console.info(self, "Installed Chrome for Testing #{release[:version]}.", platform: platform)
 							
 							installation
 						rescue
@@ -62,19 +61,18 @@ module Async
 					# @parameter state [String] Root of the state directory.
 					# @returns [Installation | Nil]
 					def self.find(version, platform, state:)
-						
 						dir = installation_dir(version, platform, state: state)
 						
-						browser_path = File.join(dir, "chrome",      Platform.chrome_binary(platform))
-						driver_path  = File.join(dir, "chromedriver", Platform.chromedriver_binary(platform))
+						browser_path = File.join(dir, "chrome", Platform.chrome_binary(platform))
+						driver_path = File.join(dir, "chromedriver", Platform.chromedriver_binary(platform))
 						
 						return nil unless File.exist?(browser_path) && File.exist?(driver_path)
 						
 						new(
 							browser_path: browser_path,
-							driver_path:  driver_path,
-							version:           version,
-							platform:          platform,
+							driver_path: driver_path,
+							version: version,
+							platform: platform,
 						)
 					end
 					
@@ -84,9 +82,9 @@ module Async
 					# @parameter platform [String] Platform string.
 					def initialize(browser_path:, driver_path:, version:, platform:)
 						@browser_path = browser_path
-						@driver_path  = driver_path
-						@version      = version
-						@platform     = platform
+						@driver_path = driver_path
+						@version = version
+						@platform = platform
 					end
 					
 					# @attribute [String] Absolute path to the Chrome browser executable.
