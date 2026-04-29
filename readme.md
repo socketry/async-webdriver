@@ -28,6 +28,14 @@ Please see the [project documentation](https://socketry.github.io/async-webdrive
 
 Please see the [project releases](https://socketry.github.io/async-webdriver/releases/index) for all releases.
 
+### v0.12.0
+
+  - Add `Async::WebDriver::Installer::Chrome` for automatic Chrome for Testing installation and management. `Installer::Chrome.install(version)` resolves the version via the Chrome for Testing JSON API, caches binaries in `~/.local/state/async-webdriver/` (XDG `$XDG_STATE_HOME`), and returns an `Installation` with paths to both the Chrome and ChromeDriver binaries.
+  - Add `Bridge::Chrome.for(version)` as a convenience shorthand: installs the requested version if needed, then returns a fully configured `Chrome` bridge. Versions can be a channel symbol (`:stable`, `:beta`, `:dev`, `:canary`), a major version string (`"148"`), or an exact version string (`"148.0.7778.56"`).
+  - Add `bake async:webdriver:chrome:install` task for installing Chrome for Testing from the command line, e.g. in CI setup steps.
+  - Fix `Bridge::Chrome#start`, `Bridge::Firefox#start`, and `Bridge::Safari#start` not forwarding the bridge's own options (including `:driver_path`) to the driver process.
+  - Rename `path:` to `driver_path:` on `Bridge::Chrome`, `Bridge::Firefox`, and `Bridge::Safari` for consistency. Add `browser_path:` to `Bridge::Chrome` (mapped to `goog:chromeOptions.binary`) in place of the former `binary:` option, consistent with `Installer::Chrome::Installation#browser_path` and `#driver_path`.
+
 ### v0.11.0
 
   - Add `Scope::Window` with `#window_rect`, `#resize_window`, `#set_window_rect`, `#maximize_window`, `#minimize_window`, and `#fullscreen_window`.
