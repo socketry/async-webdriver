@@ -17,24 +17,8 @@ APrinting = Sus::Shared("printing") do
 		proc do |request|
 			Protocol::HTTP::Response[200, [], [<<~HTML]]
 				<html>
-					<head>
-						<title>Print Test Page</title>
-						<style>
-							body { font-family: Arial, sans-serif; margin: 20px; }
-							h1 { color: #333; }
-							.page-break { page-break-after: always; }
-						</style>
-					</head>
-					<body>
-						<div class="page-break">
-							<h1>Page 1</h1>
-							<p>This is the first page of the print test.</p>
-						</div>
-						<div>
-							<h1>Page 2</h1>
-							<p>This is the second page of the print test.</p>
-						</div>
-					</body>
+					<head><title>Print Test</title></head>
+					<body><h1>Print Test</h1><p>Hello, world!</p></body>
 				</html>
 			HTML
 		end
@@ -52,16 +36,22 @@ APrinting = Sus::Shared("printing") do
 			expect(pdf_data[0, 4]).to be == "%PDF"
 		end
 		
-		it "accepts orientation option" do
+		it "accepts portrait orientation" do
 			session.visit(bound_url)
 			
-			portrait  = session.print(orientation: "portrait")
-			landscape = session.print(orientation: "landscape")
+			pdf_data = session.print(orientation: "portrait")
 			
-			expect(portrait).to be_a(String)
-			expect(portrait[0, 4]).to be == "%PDF"
-			expect(landscape).to be_a(String)
-			expect(landscape[0, 4]).to be == "%PDF"
+			expect(pdf_data).to be_a(String)
+			expect(pdf_data[0, 4]).to be == "%PDF"
+		end
+		
+		it "accepts landscape orientation" do
+			session.visit(bound_url)
+			
+			pdf_data = session.print(orientation: "landscape")
+			
+			expect(pdf_data).to be_a(String)
+			expect(pdf_data[0, 4]).to be == "%PDF"
 		end
 		
 		it "accepts page_ranges option" do
