@@ -93,19 +93,6 @@ module Async
 					new(driver_path: installation.driver_path, browser_path: installation.browser_path, **options)
 				end
 				
-				# Download and install a specific version of Chrome for Testing if not already present.
-				#
-				# Useful in CI setup steps or bake tasks that want to pre-download before
-				# entering the Async reactor.
-				#
-				# @parameter version [Symbol | String] Version specifier — see {.for}.
-				# @parameter cache_path [String] Root of the cache directory.
-				# @returns [Installer::Chrome::Installation] The installation details.
-				def self.install(version = :stable, cache_path: Installer.cache_path("chrome"))
-					require_relative "../installer/chrome"
-					Installer::Chrome.install(version, cache_path: cache_path)
-				end
-				
 				# The path to the Chrome browser executable. If `nil`, ChromeDriver uses its own discovery.
 				# @returns [String | Nil]
 				def browser_path
