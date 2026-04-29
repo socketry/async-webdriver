@@ -15,11 +15,11 @@ module Async
 					# Ordered list of (pattern, platform) pairs. First match wins.
 					PLATFORM_MAP = [
 						[/arm.*darwin|darwin.*arm|aarch64.*darwin|darwin.*aarch64/, "mac-arm64"],
-						[/darwin/,                                                   "mac-x64"],
-						[/aarch64.*linux|linux.*aarch64/,                           "linux-arm64"],
-						[/linux/,                                                    "linux64"],
-						[/x64.*mingw|mingw.*x64/,                                   "win64"],
-						[/mingw/,                                                    "win32"],
+						[/darwin/, "mac-x64"],
+						[/aarch64.*linux|linux.*aarch64/, "linux-arm64"],
+						[/linux/, "linux64"],
+						[/x64.*mingw|mingw.*x64/, "win64"],
+						[/mingw/, "win32"],
 					].freeze
 					
 					# Detect the current platform.
