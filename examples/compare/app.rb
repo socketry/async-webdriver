@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2025, by Samuel Williams.
+# Copyright, 2026, by Samuel Williams.
 
 # Simple multi-page application used by both test suites.
 # Returns different HTML based on the request path.

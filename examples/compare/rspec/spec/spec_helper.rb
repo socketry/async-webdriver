@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Released under the MIT License.
+# Copyright, 2026, by Samuel Williams.
+
 # Selenium WebDriver / RSpec spec helper for the comparison benchmark.
 #
 # Requirements: chromedriver on PATH.
