@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Released under the MIT License.
-# Copyright, 2023-2025, by Samuel Williams.
+# Copyright, 2023-2026, by Samuel Williams.
 
 require "sus/fixtures/async/reactor_context"
 
@@ -32,9 +32,8 @@ Async::WebDriver::Bridge.each do |klass|
 			@driver ||= bridge.start
 		end
 		
-		def after(error = nil)
+		after do
 			@driver&.close
-			super
 		end
 		
 		it_behaves_like ABridge
