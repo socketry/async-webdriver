@@ -96,7 +96,7 @@ For critical operations like authentication, wait for server-side effects to com
 # ✅ RELIABLE: Wait for authentication cookie
 session.click_button("Login")
 session.wait_for_navigation do |url, ready_state|
-		ready_state == "complete" && session.cookies.any?{|cookie| cookie["name"] == "auth_token"}
+	ready_state == "complete" && session.cookies.any?{|cookie| cookie["name"] == "auth_token"}
 end
 session.navigate_to("/dashboard") # Now safe
 ```
