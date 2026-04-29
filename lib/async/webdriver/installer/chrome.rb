@@ -38,9 +38,7 @@ module Async
 			# ```
 			module Chrome
 				# Default state directory, following the XDG Base Directory Specification.
-				DEFAULT_STATE = File.expand_path(
-					File.join(ENV.fetch("XDG_STATE_HOME", "~/.local/state"), "async-webdriver")
-				).freeze
+				DEFAULT_STATE = File.expand_path("async-webdriver", ENV.fetch("XDG_STATE_HOME", "~/.local/state")).freeze
 				
 				# Ensure the given version is installed and return an {Installation}.
 				#
