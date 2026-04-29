@@ -34,6 +34,11 @@ module Async
 						shrinkToFit: shrink_to_fit,
 					}.compact
 					
+					# Ensure the page is fully rendered before generating the PDF.
+					# The W3C spec schedules PDF generation on the next animation frame
+					# callback, so we explicitly wait for the document to be ready.
+					session.execute("return document.readyState")
+					
 					reply = session.post("print", parameters)
 					
 					return Base64.decode64(reply)

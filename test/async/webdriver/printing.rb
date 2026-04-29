@@ -104,12 +104,12 @@ Async::WebDriver::Bridge.each do |klass|
 			include Sus::Fixtures::Async::HTTP::ServerContext
 			
 			let(:app) do
-				proc {|request| Protocol::HTTP::Response[200, [], ["<html><body></body></html>"]]}
+				proc{|request| Protocol::HTTP::Response[200, [], ["<html><body></body></html>"]]}
 			end
 			
 			it "raises UnknownCommandError (Safari does not support the print endpoint)" do
 				session.visit(bound_url)
-				expect {session.print}.to raise_exception(Async::WebDriver::UnknownCommandError)
+				expect{session.print}.to raise_exception(Async::WebDriver::UnknownCommandError)
 			end
 		else
 			it_behaves_like APrinting

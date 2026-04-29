@@ -92,7 +92,7 @@ NavigationScope = Sus::Shared("navigation scope") do
 		
 		session.navigate_to("#{bound_url}/other-page")
 		
-		cookie = session.cookies.find {|cookie| cookie["name"] == "submitted"}
+		cookie = session.cookies.find{|cookie| cookie["name"] == "submitted"}
 		
 		expect(cookie).not.to be_nil
 		expect(cookie["value"]).to be == "true"

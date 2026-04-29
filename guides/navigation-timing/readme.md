@@ -84,7 +84,7 @@ The most reliable approach is to use `wait_for_navigation` to wait for the URL o
 ```ruby
 # ✅ RELIABLE: Wait for URL change
 session.click_button("Submit")
-session.wait_for_navigation {|url| url.end_with?("/success")}
+session.wait_for_navigation{|url| url.end_with?("/success")}
 session.navigate_to("/next-page") # Now safe
 ```
 
