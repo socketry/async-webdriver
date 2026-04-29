@@ -85,6 +85,7 @@ module Async
 								args: [
 								headless ? "--headless=new" : nil,
 								headless ? "--no-sandbox" : nil,
+								headless ? "--disable-gpu" : nil,
 								headless ? "--disable-dev-shm-usage" : nil,
 							].compact,
 							},
