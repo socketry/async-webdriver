@@ -34,9 +34,14 @@ module Async
 						shrinkToFit: shrink_to_fit,
 					}.compact
 					
-					# Ensure the page is fully rendered before generating the PDF.
-					# The W3C spec schedules PDF generation on the next animation frame
-					# callback, so we explicitly wait for the document to be ready.
+					# Synchronise with Chrome's rendering pipeline before issuing the print
+					# command. The underlying CDP call (Page.printToPDF) is synchronous: if
+					# the renderer process has not yet fully initialised its print pipeline
+					# by the time the command arrives, Chrome returns JSON-RPC error -32000
+					# ("Printing failed") with no retry. A JavaScript round-trip forces
+					# ChromeDriver to wait for the renderer to be live (a JS execution
+					# context must exist), which also guarantees the print pipeline is ready.
+					# Without this, fast-loading pages can trigger the race intermittently.
 					session.execute("return document.readyState")
 					
 					reply = session.post("print", parameters)
