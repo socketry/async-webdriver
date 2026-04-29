@@ -34,9 +34,10 @@ module Async
 					# @returns [Hash] `{ version:, chrome_url:, chromedriver_url: }`
 					def self.resolve(version, platform)
 						case version
-						when Symbol    then resolve_channel(version, platform)
-						when /\A\d+\z/ then resolve_major(version, platform)
-						else                resolve_exact(version, platform)
+						when Symbol                    then resolve_channel(version, platform)
+						when /\A(stable|beta|dev|canary)\z/ then resolve_channel(version.to_sym, platform)
+						when /\A\d+\z/                 then resolve_major(version, platform)
+						else                                resolve_exact(version, platform)
 						end
 					end
 					

@@ -14,8 +14,6 @@
 def install(version: "stable")
 	require "async/webdriver/installer/chrome"
 	
-	version = version.to_sym if %w[stable beta dev canary].include?(version)
-	
 	installation = Async::WebDriver::Installer::Chrome.install(version)
 	
 	Console.info(self, "Chrome for Testing is ready.",
