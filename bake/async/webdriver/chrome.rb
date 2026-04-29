@@ -22,4 +22,6 @@ def install(version: "stable")
 		browser_path: installation.browser_path,
 		driver_path:  installation.driver_path,
 	)
+	
+	return installation
 end
