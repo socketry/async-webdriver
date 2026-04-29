@@ -38,7 +38,7 @@ module Async
 			# ```
 			module Chrome
 				# Default cache directory, following the XDG Base Directory Specification.
-				DEFAULT_CACHE = File.expand_path("async-webdriver.rb", ENV.fetch("XDG_CACHE_HOME", "~/.cache")).freeze
+				
 				
 				# Ensure the given version is installed and return an {Installation}.
 				#
@@ -48,7 +48,7 @@ module Async
 				# @parameter version [Symbol | String] Version specifier.
 				# @parameter cache [String] Root of the cache directory.
 				# @returns [Installation]
-				def self.install(version = :stable, cache: DEFAULT_CACHE)
+				def self.install(version = :stable, cache: Installer.cache_path("chrome"))
 					Installation.install(version, cache: cache)
 				end
 				
@@ -57,7 +57,7 @@ module Async
 				# @parameter version [Symbol | String] Channel or exact version string.
 				# @parameter cache [String] Root of the cache directory.
 				# @returns [Installation | Nil]
-				def self.find(version, cache: DEFAULT_CACHE)
+				def self.find(version, cache: Installer.cache_path("chrome"))
 					Installation.find(version, Platform.current, cache: cache)
 				end
 			end

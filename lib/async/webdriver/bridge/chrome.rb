@@ -83,13 +83,13 @@ module Async
 				#
 				# @parameter version [Symbol | String] `:stable`, `:beta`, `:dev`, `:canary`,
 				#   a major version string like `"148"`, or an exact version like `"148.0.7778.56"`.
-				# @parameter state [String] Root of the state directory.
-				#   Default: `~/.local/state/async-webdriver` (XDG-compliant).
+				# @parameter cache [String] Root of the cache directory.
+				#   Default: `~/.cache/async-webdriver.rb` (XDG-compliant).
 				# @parameter options [Hash] Additional options forwarded to {.new} (e.g. `headless: false`).
 				# @returns [Chrome] A configured bridge.
-				def self.for(version = :stable, state: Installer::Chrome::DEFAULT_CACHE, **options)
+				def self.for(version = :stable, cache: Installer.cache_path("chrome"), **options)
 					require_relative "../installer/chrome"
-					installation = Installer::Chrome.find(version, state: state) || Installer::Chrome.install(version, state: state)
+					installation = Installer::Chrome.find(version, cache: cache) || Installer::Chrome.install(version, cache: cache)
 					new(driver_path: installation.driver_path, browser_path: installation.browser_path, **options)
 				end
 				
@@ -99,11 +99,11 @@ module Async
 				# entering the Async reactor.
 				#
 				# @parameter version [Symbol | String] Version specifier — see {.for}.
-				# @parameter state [String] Root of the state directory.
+				# @parameter cache [String] Root of the cache directory.
 				# @returns [Installer::Chrome::Installation] The installation details.
-				def self.install(version = :stable, state: Installer::Chrome::DEFAULT_CACHE)
+				def self.install(version = :stable, cache: Installer.cache_path("chrome"))
 					require_relative "../installer/chrome"
-					Installer::Chrome.install(version, state: state)
+					Installer::Chrome.install(version, cache: cache)
 				end
 				
 				# The path to the Chrome browser executable. If `nil`, ChromeDriver uses its own discovery.

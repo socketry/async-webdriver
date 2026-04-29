@@ -14,6 +14,19 @@ module Async
 		#
 		# - {Installer::Chrome} — Chrome for Testing, via the Chrome for Testing JSON API.
 		module Installer
+			# Resolve the cache path for the given sub-directory.
+			#
+			# Follows the XDG Base Directory Specification, using `$XDG_CACHE_HOME`
+			# (default: `~/.cache`) as the root, with `async-webdriver.rb` as the
+			# application directory.
+			#
+			# @parameter subdirectory [String | Nil] Optional sub-directory, e.g. `"chrome"`.
+			# @parameter env [Hash] Environment to read `XDG_CACHE_HOME` from. Default: `ENV`.
+			# @returns [String] Absolute path.
+			def self.cache_path(subdirectory = nil, env = ENV)
+				base = File.expand_path("async-webdriver.rb", env.fetch("XDG_CACHE_HOME", "~/.cache"))
+				subdirectory ? File.join(base, subdirectory) : base
+			end
 		end
 	end
 end
