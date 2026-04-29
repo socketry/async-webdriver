@@ -84,7 +84,7 @@ The most reliable approach is to use `wait_for_navigation` to wait for the URL o
 ```ruby
 # ✅ RELIABLE: Wait for URL change
 session.click_button("Submit")
-session.wait_for_navigation {|url| url.end_with?("/success")}
+session.wait_for_navigation{|url| url.end_with?("/success")}
 session.navigate_to("/next-page") # Now safe
 ```
 
@@ -96,7 +96,7 @@ For critical operations like authentication, wait for server-side effects to com
 # ✅ RELIABLE: Wait for authentication cookie
 session.click_button("Login")
 session.wait_for_navigation do |url, ready_state|
-  ready_state == "complete" && session.cookies.any?{|cookie| cookie['name'] == 'auth_token'}
+	ready_state == "complete" && session.cookies.any?{|cookie| cookie["name"] == "auth_token"}
 end
 session.navigate_to("/dashboard") # Now safe
 ```

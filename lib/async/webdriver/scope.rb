@@ -13,6 +13,7 @@ require_relative "scope/navigation"
 require_relative "scope/printing"
 require_relative "scope/screen_capture"
 require_relative "scope/timeouts"
+require_relative "scope/window"
 
 module Async
 	module WebDriver

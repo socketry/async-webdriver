@@ -127,6 +127,7 @@ module Async
 			include Scope::Printing
 			include Scope::ScreenCapture
 			include Scope::Timeouts
+			include Scope::Window
 			
 			# Reset the session to a clean state.
 			def reset!
