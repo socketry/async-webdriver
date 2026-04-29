@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.11.0
 
   - Add `Scope::Window` with `#window_rect`, `#resize_window`, `#set_window_rect`, `#maximize_window`, `#minimize_window`, and `#fullscreen_window`.
   - Expand `Scope::Printing#print` with full W3C WebDriver parameters: `orientation`, `scale`, `background`, `page`, `margin`, `page_ranges`, and `shrink_to_fit`.
