@@ -54,9 +54,9 @@ module Async
 					Installation.install(version, state: state)
 				end
 				
-				# Find an already-installed version without hitting the network.
+				# Find an already-installed version or channel without hitting the network.
 				#
-				# @parameter version [String] Exact version string, e.g. `"148.0.7778.56"`.
+				# @parameter version [Symbol | String] Channel or exact version string.
 				# @parameter state [String] Root of the state directory.
 				# @returns [Installation | Nil]
 				def self.find(version, state: DEFAULT_STATE)

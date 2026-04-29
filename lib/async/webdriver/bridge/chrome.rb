@@ -89,7 +89,7 @@ module Async
 				# @returns [Chrome] A configured bridge.
 				def self.for(version = :stable, state: Installer::Chrome::DEFAULT_STATE, **options)
 					require_relative "../installer/chrome"
-					installation = Installer::Chrome.install(version, state: state)
+					installation = Installer::Chrome.find(version, state: state) || Installer::Chrome.install(version, state: state)
 					new(driver_path: installation.driver_path, browser_path: installation.browser_path, **options)
 				end
 				

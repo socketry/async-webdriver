@@ -20,10 +20,20 @@ module Async
 				# 	{state}/{platform}/{version}/
 				# 	  chrome/       ← extracted chrome zip contents
 				# 	  chromedriver/ ← extracted chromedriver zip contents
+				#
+				# Channel names (e.g. `stable`) are stored as symlinks pointing at the
+				# specific version directory, so that {find} can resolve them without
+				# hitting the network. {install} always re-checks the API and updates
+				# the symlink if the channel has moved on to a newer version.
 				class Installation
 					# Look up an existing installation, or download and install a fresh one.
 					#
-					# @parameter version [Symbol | String] Channel or version specifier — see {Async::WebDriver::Bridge::Chrome.for}.
+					# For channel specifiers (`:stable`, `:beta`, etc.), always hits the
+					# Chrome for Testing API to resolve the current version, downloads if
+					# needed, and updates the channel symlink. For exact versions, checks
+					# the local cache only.
+					#
+					# @parameter version [Symbol | String] Channel or version specifier.
 					# @parameter state [String] Root of the state directory.
 					# @returns [Installation]
 					def self.install(version, state:)
@@ -50,29 +60,30 @@ module Async
 							end
 						end
 						
+						# Update the channel symlink so subsequent find(:stable) calls
+						# resolve locally without a network request.
+						if channel = channel_name(version)
+							update_channel_symlink(channel, release[:version], platform, state: state)
+						end
+						
 						return installation
 					end
 					
-					# Find an already-installed version, without hitting the network.
+					# Find an already-installed version or channel, without hitting the network.
 					#
-					# @parameter version [String] Exact version, e.g. `"148.0.7778.56"`.
+					# For channel names (`:stable`, `"stable"`, etc.), resolves the local
+					# symlink. For exact versions, checks the installation directory directly.
+					#
+					# @parameter version [Symbol | String] Channel or exact version string.
 					# @parameter platform [String] Platform string, e.g. `"mac-arm64"`.
 					# @parameter state [String] Root of the state directory.
 					# @returns [Installation | Nil]
 					def self.find(version, platform, state:)
-						dir = installation_dir(version, platform, state: state)
-						
-						browser_path = File.join(dir, "chrome", Platform.chrome_binary(platform))
-						driver_path = File.join(dir, "chromedriver", Platform.chromedriver_binary(platform))
-						
-						return nil unless File.exist?(browser_path) && File.exist?(driver_path)
-						
-						new(
-							browser_path: browser_path,
-							driver_path: driver_path,
-							version: version,
-							platform: platform,
-						)
+						if channel = channel_name(version)
+							find_channel(channel, platform, state: state)
+						else
+							find_version(version, platform, state: state)
+						end
 					end
 					
 					# @parameter browser_path [String] Absolute path to the Chrome browser executable.
@@ -97,6 +108,51 @@ module Async
 					
 					# @attribute [String] Platform, e.g. `"mac-arm64"`.
 					attr :platform
+					
+					private_class_method def self.channel_name(version)
+						Releases::CHANNELS.key(version.to_s.capitalize) && version.to_s.downcase
+					end
+					
+					private_class_method def self.find_channel(channel, platform, state:)
+						symlink = channel_symlink(channel, platform, state: state)
+						return nil unless File.symlink?(symlink)
+						
+						# Derive the version from the symlink target name.
+						version = File.basename(File.readlink(symlink))
+						find_version(version, platform, state: state)
+					end
+					
+					private_class_method def self.find_version(version, platform, state:)
+						dir = installation_dir(version, platform, state: state)
+						
+						browser_path = File.join(dir, "chrome", Platform.chrome_binary(platform))
+						driver_path = File.join(dir, "chromedriver", Platform.chromedriver_binary(platform))
+						
+						return nil unless File.exist?(browser_path) && File.exist?(driver_path)
+						
+						new(
+							browser_path: browser_path,
+							driver_path: driver_path,
+							version: version,
+							platform: platform,
+						)
+					end
+					
+					private_class_method def self.update_channel_symlink(channel, version, platform, state:)
+						symlink = channel_symlink(channel, platform, state: state)
+						target = installation_dir(version, platform, state: state)
+						
+						# Remove stale symlink if it points elsewhere.
+						if File.symlink?(symlink) && File.readlink(symlink) != target
+							File.unlink(symlink)
+						end
+						
+						File.symlink(target, symlink) unless File.symlink?(symlink)
+					end
+					
+					private_class_method def self.channel_symlink(channel, platform, state:)
+						File.join(state, platform, channel.to_s)
+					end
 					
 					private_class_method def self.installation_dir(version, platform, state:)
 						File.join(state, platform, version)
