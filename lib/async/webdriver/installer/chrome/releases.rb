@@ -72,8 +72,8 @@ module Async
 						data = fetch_json(VERSIONS_URL)
 						
 						entry = data["versions"]
-							.select { |v| v["version"].start_with?("#{major}.") }
-							.max_by { |v| Gem::Version.new(v["version"]) }
+							.select{|v| v["version"].start_with?("#{major}.")}
+							.max_by{|v| Gem::Version.new(v["version"])}
 						
 						raise "No version found for major version #{major}" unless entry
 						
@@ -83,7 +83,7 @@ module Async
 					def self.resolve_exact(version, platform)
 						data = fetch_json(VERSIONS_URL)
 						
-						entry = data["versions"].find { |v| v["version"] == version }
+						entry = data["versions"].find{|v| v["version"] == version}
 						raise "Version #{version} not found" unless entry
 						
 						extract(entry, platform)
@@ -94,11 +94,11 @@ module Async
 						downloads = entry["downloads"]
 						
 						chrome_url = downloads["chrome"]
-							&.find { |d| d["platform"] == platform }
+							&.find{|d| d["platform"] == platform}
 							&.dig("url")
 						
 						chromedriver_url = downloads["chromedriver"]
-							&.find { |d| d["platform"] == platform }
+							&.find{|d| d["platform"] == platform}
 							&.dig("url")
 						
 						raise "No Chrome download for platform #{platform} in version #{version}" unless chrome_url
