@@ -5,6 +5,7 @@
 
 require_relative "generic"
 require_relative "process_group"
+require_relative "../installer"
 
 module Async
 	module WebDriver
