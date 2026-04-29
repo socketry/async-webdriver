@@ -29,7 +29,7 @@ describe Async::WebDriver::Installer::Chrome::Installation do
 			installation = subject.install(:stable, cache_path: cache_path)
 			
 			expect(installation).to be_a(subject)
-			expect(installation.version).to match(/\A\d+\.\d+\.\d+\.\d+\z/)
+			expect(installation.version).to be =~ /\A\d+\.\d+\.\d+\.\d+\z/
 			expect(installation.platform).to be == platform
 			expect(File.exist?(installation.browser_path)).to be == true
 			expect(File.exist?(installation.driver_path)).to be == true

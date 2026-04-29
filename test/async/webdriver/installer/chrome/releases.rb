@@ -13,7 +13,7 @@ describe Async::WebDriver::Installer::Chrome::Releases do
 		it "resolves :stable to a version hash" do
 			result = subject.resolve(:stable, platform)
 			expect(result).to have_keys(:version, :chrome_url, :chromedriver_url)
-			expect(result[:version]).to match(/\A\d+\.\d+\.\d+\.\d+\z/)
+			expect(result[:version]).to be =~ /\A\d+\.\d+\.\d+\.\d+\z/
 		end
 		
 		it "resolves 'stable' string the same as :stable" do
@@ -23,7 +23,7 @@ describe Async::WebDriver::Installer::Chrome::Releases do
 		it "resolves a major version string" do
 			major = subject.resolve(:stable, platform)[:version].split(".").first
 			result = subject.resolve(major, platform)
-			expect(result[:version]).to start_with("#{major}.")
+			expect(result[:version]).to be(:start_with?, "#{major}.")
 		end
 		
 		it "raises for an unknown channel" do
