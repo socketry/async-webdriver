@@ -5,6 +5,8 @@
 
 require "fileutils"
 require "tempfile"
+require_relative "platform"
+require_relative "releases"
 
 module Async
 	module WebDriver
@@ -25,8 +27,6 @@ module Async
 					# @parameter state [String] Root of the state directory.
 					# @returns [Installation]
 					def self.install(version, state:)
-						require_relative "platform"
-						require_relative "releases"
 						
 						platform = Platform.current
 						info     = Releases.resolve(version, platform)
@@ -62,7 +62,6 @@ module Async
 					# @parameter state [String] Root of the state directory.
 					# @returns [Installation | Nil]
 					def self.find(version, platform, state:)
-						require_relative "platform"
 						
 						dir = installation_dir(version, platform, state: state)
 						
