@@ -8,12 +8,15 @@ module Async
 		module Bridge
 			# Represents an instance of a locally running driver (usually with a process group).
 			class Driver
+				# Initialize a driver wrapper.
+				# @parameter options [Hash] Driver configuration options.
 				def initialize(**options)
 					@options = options
 					@count = 0
 					@closed = false
 				end
 				
+				# @returns [Integer] The number of concurrent sessions the driver can sustain.
 				def concurrency
 					@options.fetch(:concurrency, 128)
 				end
@@ -23,18 +26,22 @@ module Async
 				# @attribute [Hash] The status of the driver after a connection has been established.
 				attr :status
 				
+				# @returns [Boolean] Whether the driver can still be used.
 				def viable?
 					!@closed
 				end
 				
+				# @returns [Boolean] Whether the driver has been closed.
 				def closed?
 					@closed
 				end
 				
+				# Mark the driver as closed.
 				def close
 					@closed = true
 				end
 				
+				# @returns [Boolean] Whether the driver may be returned to a pool.
 				def reusable?
 					@options.fetch(:reusable, !@closed)
 				end
@@ -50,14 +57,17 @@ module Async
 					end
 				end
 				
+				# @returns [Integer] The port the driver listens on.
 				def port
 					@port ||= @options.fetch(:port, self.ephemeral_port)
 				end
 				
+				# @returns [Async::HTTP::Endpoint] The HTTP endpoint exposed by the driver.
 				def endpoint
 					Async::HTTP::Endpoint.parse("http://localhost", port: self.port)
 				end
 				
+				# @returns [Client] A client connected to the driver endpoint.
 				def client
 					Client.open(self.endpoint)
 				end

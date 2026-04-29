@@ -7,6 +7,7 @@ require_relative "version"
 
 module Async
 	module WebDriver
+		# The base class for WebDriver protocol errors.
 		class Error < StandardError
 		end
 		

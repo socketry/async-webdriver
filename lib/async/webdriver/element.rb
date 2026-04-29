@@ -20,6 +20,8 @@ module Async
 			class Attributes
 				include Enumerable
 				
+				# Initialize the attribute wrapper for an element.
+				# @parameter element [Element] The element whose attributes will be accessed.
 				def initialize(element)
 					@element = element
 					@keys = nil

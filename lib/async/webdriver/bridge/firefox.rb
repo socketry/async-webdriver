@@ -19,6 +19,7 @@ module Async
 			# 	bridge&.close
 			# end
 			class Firefox < Generic
+				# @returns [String] The path to the `geckodriver` executable.
 				def path
 					@options.fetch(:path, "geckodriver")
 				end
@@ -32,12 +33,16 @@ module Async
 					return nil
 				end
 				
+				# A locally managed `geckodriver` process.
 				class Driver < Bridge::Driver
+					# Initialize a managed Firefox driver process.
+					# @parameter options [Hash] Driver configuration options.
 					def initialize(**options)
 						super(**options)
 						@process_group = nil
 					end
 					
+					# @returns [Integer] Firefox drivers support one session at a time.
 					def concurrency
 						1
 					end
@@ -50,12 +55,14 @@ module Async
 						].compact
 					end
 					
+					# Start the managed Firefox driver process and wait for readiness.
 					def start
 						@process_group = ProcessGroup.spawn(*arguments(**@options))
 						
 						super
 					end
 					
+					# Stop the managed Firefox driver process.
 					def close
 						if @process_group
 							@process_group.close

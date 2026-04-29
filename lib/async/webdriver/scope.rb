@@ -13,3 +13,11 @@ require_relative "scope/navigation"
 require_relative "scope/printing"
 require_relative "scope/screen_capture"
 require_relative "scope/timeouts"
+
+module Async
+	module WebDriver
+		# @namespace
+		module Scope
+		end
+	end
+end

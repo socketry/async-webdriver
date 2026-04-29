@@ -56,6 +56,7 @@ module Async
 				@options = options
 			end
 			
+			# @returns [String] A concise representation of the session.
 			def inspect
 				"\#<#{self.class} id=#{@id.inspect}>"
 			end

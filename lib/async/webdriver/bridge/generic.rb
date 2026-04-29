@@ -12,6 +12,8 @@ module Async
 		module Bridge
 			# Generic W3C WebDriver implementation.
 			class Generic
+				# Initialize a generic bridge wrapper.
+				# @parameter options [Hash] Bridge configuration options.
 				def initialize(**options)
 					@options = options
 				end
@@ -26,6 +28,7 @@ module Async
 					version != nil
 				end
 				
+				# @returns [Boolean] Whether headless mode is enabled by default.
 				def headless?
 					@options.fetch(:headless, true)
 				end

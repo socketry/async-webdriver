@@ -20,6 +20,7 @@ module Async
 			# end
 			# ```
 			class Chrome < Generic
+				# @returns [String] The path to the `chromedriver` executable.
 				def path
 					@options.fetch(:path, "chromedriver")
 				end
@@ -33,7 +34,10 @@ module Async
 					return nil
 				end
 				
+				# A locally managed `chromedriver` process.
 				class Driver < Bridge::Driver
+					# Initialize a managed Chrome driver process.
+					# @parameter options [Hash] Driver configuration options.
 					def initialize(**options)
 						super(**options)
 						@process_group = nil
@@ -47,12 +51,14 @@ module Async
 						].compact
 					end
 					
+					# Start the managed Chrome driver process and wait for readiness.
 					def start
 						@process_group = ProcessGroup.spawn(*arguments(**@options))
 						
 						super
 					end
 					
+					# Stop the managed Chrome driver process.
 					def close
 						if @process_group
 							@process_group.close

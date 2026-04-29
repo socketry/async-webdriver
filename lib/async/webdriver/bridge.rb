@@ -21,6 +21,9 @@ module Async
 				Bridge::Safari,
 			]
 			
+			# Iterate over supported bridge implementations.
+			# @yields {|bridge| ...} Each supported bridge class.
+			# 	@parameter bridge [Class] A supported bridge implementation.
 			def self.each(&block)
 				return enum_for(:each) unless block_given?
 				
@@ -45,6 +48,7 @@ module Async
 			# ```
 			ASYNC_WEBDRIVER_BRIDGE_HEADLESS = "ASYNC_WEBDRIVER_BRIDGE_HEADLESS"
 			
+			# Raised when no supported bridge implementation is available.
 			class UnsupportedError < Error
 			end
 			

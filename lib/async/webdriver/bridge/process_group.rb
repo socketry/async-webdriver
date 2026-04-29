@@ -75,13 +75,18 @@ module Async
 				end
 			end
 			
+			# A driver wrapper that closes an associated process handle.
 			class ProcessDriver < Driver
+				# Initialize a process-backed driver.
+				# @parameter endpoint [Object] Driver options or endpoint information.
+				# @parameter process [ProcessGroup] The managed process group.
 				def initialize(endpoint, process)
 					super(endpoint)
 					
 					@process = process
 				end
 				
+				# Close the driver and its process group.
 				def close
 					super
 					
