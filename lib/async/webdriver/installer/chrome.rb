@@ -18,8 +18,8 @@ module Async
 			# - A major version string: `"148"` (resolves to the latest patch)
 			# - An exact version string: `"148.0.7778.56"`
 			#
-			# Installations are cached in `~/.local/state/async-webdriver/` by default
-			# (respects `$XDG_STATE_HOME`).
+			# Installations are cached in `~/.cache/async-webdriver.rb/` by default
+			# (respects `$XDG_CACHE_HOME`).
 			#
 			# ## Example
 			#
@@ -37,8 +37,8 @@ module Async
 			# bridge = Async::WebDriver::Bridge::Chrome.for(:stable)
 			# ```
 			module Chrome
-				# Default state directory, following the XDG Base Directory Specification.
-				DEFAULT_STATE = File.expand_path("async-webdriver", ENV.fetch("XDG_STATE_HOME", "~/.local/state")).freeze
+				# Default cache directory, following the XDG Base Directory Specification.
+				DEFAULT_CACHE = File.expand_path("async-webdriver.rb", ENV.fetch("XDG_CACHE_HOME", "~/.cache")).freeze
 				
 				# Ensure the given version is installed and return an {Installation}.
 				#
@@ -46,19 +46,19 @@ module Async
 				# infrastructure only when the version is not already present.
 				#
 				# @parameter version [Symbol | String] Version specifier.
-				# @parameter state [String] Root of the state directory.
+				# @parameter cache [String] Root of the cache directory.
 				# @returns [Installation]
-				def self.install(version = :stable, state: DEFAULT_STATE)
-					Installation.install(version, state: state)
+				def self.install(version = :stable, cache: DEFAULT_CACHE)
+					Installation.install(version, cache: cache)
 				end
 				
 				# Find an already-installed version or channel without hitting the network.
 				#
 				# @parameter version [Symbol | String] Channel or exact version string.
-				# @parameter state [String] Root of the state directory.
+				# @parameter cache [String] Root of the cache directory.
 				# @returns [Installation | Nil]
-				def self.find(version, state: DEFAULT_STATE)
-					Installation.find(version, Platform.current, state: state)
+				def self.find(version, cache: DEFAULT_CACHE)
+					Installation.find(version, Platform.current, cache: cache)
 				end
 			end
 		end

@@ -87,7 +87,7 @@ module Async
 				#   Default: `~/.local/state/async-webdriver` (XDG-compliant).
 				# @parameter options [Hash] Additional options forwarded to {.new} (e.g. `headless: false`).
 				# @returns [Chrome] A configured bridge.
-				def self.for(version = :stable, state: Installer::Chrome::DEFAULT_STATE, **options)
+				def self.for(version = :stable, state: Installer::Chrome::DEFAULT_CACHE, **options)
 					require_relative "../installer/chrome"
 					installation = Installer::Chrome.find(version, state: state) || Installer::Chrome.install(version, state: state)
 					new(driver_path: installation.driver_path, browser_path: installation.browser_path, **options)
@@ -101,7 +101,7 @@ module Async
 				# @parameter version [Symbol | String] Version specifier — see {.for}.
 				# @parameter state [String] Root of the state directory.
 				# @returns [Installer::Chrome::Installation] The installation details.
-				def self.install(version = :stable, state: Installer::Chrome::DEFAULT_STATE)
+				def self.install(version = :stable, state: Installer::Chrome::DEFAULT_CACHE)
 					require_relative "../installer/chrome"
 					Installer::Chrome.install(version, state: state)
 				end
