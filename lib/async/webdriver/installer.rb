@@ -29,7 +29,7 @@ module Async
 				if subdirectory
 					path = File.join(path, subdirectory)
 				end
-
+				
 				return path
 			end
 		end
