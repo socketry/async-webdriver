@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-  - Add `Async::WebDriver::Installer::Chrome` for automatic Chrome for Testing installation and management. `Installer::Chrome.install(version)` resolves the version via the Chrome for Testing JSON API, caches binaries in `~/.local/state/async-webdriver/` (XDG `$XDG_STATE_HOME`), and returns an `Installation` with paths to both the Chrome and ChromeDriver binaries. The namespace is designed to accommodate additional browsers (e.g. `Installer::Firefox`) in the future.
+  - Add `Async::WebDriver::Installer::Chrome` for automatic Chrome for Testing installation and management. `Installer::Chrome.install(version)` resolves the version via the Chrome for Testing JSON API, caches binaries in `~/.local/state/async-webdriver/` (XDG `$XDG_STATE_HOME`), and returns an `Installation` with paths to both the Chrome and ChromeDriver binaries.
   - Add `Bridge::Chrome.for(version)` as a convenience shorthand: installs the requested version if needed, then returns a fully configured `Chrome` bridge. Versions can be a channel symbol (`:stable`, `:beta`, `:dev`, `:canary`), a major version string (`"148"`), or an exact version string (`"148.0.7778.56"`).
   - Add `Bridge::Chrome.install(version)` for pre-downloading in CI setup steps or bake tasks, before entering the Async reactor.
   - Add `bake async:webdriver:chrome:install` task for installing Chrome for Testing from the command line, e.g. in CI setup steps.
