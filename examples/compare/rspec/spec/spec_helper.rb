@@ -12,6 +12,11 @@ require "webrick"
 require "selenium-webdriver"
 require_relative "../../app"
 
+# Locate the chromedriver installed by async-webdriver's installer.
+CHROMEDRIVER_PATH = Dir.glob(
+	File.expand_path("~/.cache/async-webdriver.rb/chrome/**/chromedriver")
+).find {|f| File.executable?(f) && !File.directory?(f)}
+
 # Start a WEBrick server serving the same app as the Sus suite.
 SERVER = WEBrick::HTTPServer.new(
 	Port: 0,
@@ -40,7 +45,9 @@ RSpec.configure do |config|
 	config.before(:context) do
 		options = Selenium::WebDriver::Chrome::Options.new
 		options.add_argument("--headless=new")
-		self.class.instance_variable_set(:@driver, Selenium::WebDriver.for(:chrome, options: options))
+		options.binary = Dir.glob(File.expand_path("~/.cache/async-webdriver.rb/chrome/**/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing")).first
+		service = Selenium::WebDriver::Chrome::Service.new(path: CHROMEDRIVER_PATH)
+		self.class.instance_variable_set(:@driver, Selenium::WebDriver.for(:chrome, options: options, service: service))
 	end
 	
 	config.after(:context) do

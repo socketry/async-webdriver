@@ -16,10 +16,11 @@
 require "sus/fixtures/async/reactor_context"
 require "sus/fixtures/async/http/server_context"
 require "async/webdriver"
+require "async/webdriver/installer"
 
 require_relative "../../app"
 
-BRIDGE = Async::WebDriver::Bridge::Chrome.new
+BRIDGE = Async::WebDriver::Bridge::Chrome.for(:stable)
 
 POOL = Async::WebDriver::Bridge::Pool.new(BRIDGE)
 

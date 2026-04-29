@@ -8,52 +8,59 @@ Both suites run **identical tests** against the same simple multi-page HTML appl
 
 ## Requirements
 
-**chromedriver** must be on your PATH. See the main readme for installation instructions.
+Install Chrome for Testing via the built-in installer:
 
-> Safari is not suitable for this benchmark — it only allows one concurrent session,
-> so the parallel benefit cannot be demonstrated.
+``` ruby
+require "async/webdriver/installer"
+Async::WebDriver::Installer::Chrome.install(:stable)
+```
+
+Or use `Async::WebDriver::Bridge::Chrome.for(:stable)` directly — it installs on first use.
 
 ## Setup
 
 ```sh
 # Sus / Async::WebDriver
-cd sus
-bundle install
+cd sus && bundle install
 
 # RSpec / Selenium
-cd rspec
-bundle install
+cd rspec && bundle install
 ```
 
 ## Running
 
 ```sh
-# Selenium — sequential (one Chrome session per describe block, started/stopped each time)
+# Selenium — sequential (one ChromeDriver session per describe block)
 cd rspec
 time bundle exec rspec
 
-# Async::WebDriver — sequential (pool keeps Chrome alive and reuses sessions)
+# Async::WebDriver — sequential (pool keeps Chrome alive, sessions reused)
 cd sus
 time bundle exec sus test/suite.rb
 
-# Async::WebDriver — concurrent (pool serves all four describe blocks in parallel)
+# Async::WebDriver — concurrent (all describe blocks run in parallel)
 cd sus
 time bundle exec sus-parallel test/suite.rb
 ```
 
-## What the comparison shows
+## Results
 
-| | Selenium + RSpec | Async::WebDriver + Sus |
-|---|---|---|
-| Session per group | New ChromeDriver session (startup cost each time) | Pool checkout (reused, no startup) |
-| HTTP server | WEBrick (blocking threads) | Async::HTTP (non-blocking fibers) |
-| Test execution | Sequential | Sequential or concurrent (`sus-parallel`) |
+```
+Selenium / RSpec    sequential   4.31s
+Async::WebDriver    sequential   2.05s   (~2× faster)
+Async::WebDriver    sus-parallel 4.07s   (slower — separate processes, each starts Chrome)
+```
 
-**Sequential**: async-webdriver is marginally faster due to session reuse and the
-async HTTP stack — the browser is the bottleneck either way.
+## Why async-webdriver is faster sequentially
 
-**Concurrent** (`sus-parallel`): async-webdriver runs all four describe blocks at the
-same time inside a single process, sharing one Chrome pool. Wall-clock time drops to
-roughly the duration of the slowest group rather than the sum of all groups.
-Selenium would need separate processes (e.g. `parallel_tests`) and separate
-ChromeDriver instances to achieve the same, with significantly more overhead.
+The pool keeps a **single Chrome process alive** for the entire run and reuses the
+same session across all 16 tests. Selenium creates and tears down a fresh ChromeDriver
+session for each of the 4 describe groups, paying startup overhead four times.
+
+## Why sus-parallel is slower here
+
+`sus-parallel` forks separate OS processes. Each process gets its own copy of the
+pool constant and starts its own Chrome — negating the reuse benefit. The concurrency
+advantage of async-webdriver shows inside a **single process** using `Async`, where
+many concurrent fibers share one pool. For this kind of in-process concurrency,
+look at `async-webdriver` with `Async::Barrier` rather than `sus-parallel`.
