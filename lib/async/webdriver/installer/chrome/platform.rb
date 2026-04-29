@@ -37,13 +37,20 @@ module Async
 					# @returns [String]
 					def self.chrome_binary(platform)
 						case platform
-						when "mac-arm64"  then "chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
-						when "mac-x64"    then "chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
-						when "linux64"    then "chrome-linux64/chrome"
-						when "linux-arm64" then "chrome-linux-arm64/chrome"
-						when "win64"      then "chrome-win64/chrome.exe"
-						when "win32"      then "chrome-win32/chrome.exe"
-						else raise "Unknown platform: #{platform}"
+						when "mac-arm64"
+							"chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+						when "mac-x64"
+							"chrome-mac-x64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing"
+						when "linux64"
+							"chrome-linux64/chrome"
+						when "linux-arm64"
+							"chrome-linux-arm64/chrome"
+						when "win64"
+							"chrome-win64/chrome.exe"
+						when "win32"
+							"chrome-win32/chrome.exe"
+						else
+							raise "Unknown platform: #{platform}"
 						end
 					end
 					
@@ -52,13 +59,20 @@ module Async
 					# @returns [String]
 					def self.chromedriver_binary(platform)
 						case platform
-						when "mac-arm64"  then "chromedriver-mac-arm64/chromedriver"
-						when "mac-x64"    then "chromedriver-mac-x64/chromedriver"
-						when "linux64"    then "chromedriver-linux64/chromedriver"
-						when "linux-arm64" then "chromedriver-linux-arm64/chromedriver"
-						when "win64"      then "chromedriver-win64/chromedriver.exe"
-						when "win32"      then "chromedriver-win32/chromedriver.exe"
-						else raise "Unknown platform: #{platform}"
+						when "mac-arm64"
+							"chromedriver-mac-arm64/chromedriver"
+						when "mac-x64"
+							"chromedriver-mac-x64/chromedriver"
+						when "linux64"
+							"chromedriver-linux64/chromedriver"
+						when "linux-arm64"
+							"chromedriver-linux-arm64/chromedriver"
+						when "win64"
+							"chromedriver-win64/chromedriver.exe"
+						when "win32"
+							"chromedriver-win32/chromedriver.exe"
+						else
+							raise "Unknown platform: #{platform}"
 						end
 					end
 				end
