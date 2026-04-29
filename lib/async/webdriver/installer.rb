@@ -24,8 +24,13 @@ module Async
 			# @parameter env [Hash] Environment to read `XDG_CACHE_HOME` from. Default: `ENV`.
 			# @returns [String] Absolute path.
 			def self.cache_path(subdirectory = nil, env = ENV)
-				base = File.expand_path("async-webdriver.rb", env.fetch("XDG_CACHE_HOME", "~/.cache"))
-				subdirectory ? File.join(base, subdirectory) : base
+				path = File.expand_path("async-webdriver.rb", env.fetch("XDG_CACHE_HOME", "~/.cache"))
+				
+				if subdirectory
+					path = File.join(path, subdirectory)
+				end
+
+				return path
 			end
 		end
 	end

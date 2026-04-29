@@ -32,9 +32,8 @@ Async::WebDriver::Bridge.each do |klass|
 			@driver ||= bridge.start
 		end
 		
-		def after(error = nil)
+		after do
 			@driver&.close
-			super
 		end
 		
 		it_behaves_like ABridge
