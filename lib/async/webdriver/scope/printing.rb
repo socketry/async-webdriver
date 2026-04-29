@@ -36,7 +36,7 @@ module Async
 					
 					reply = session.post("print", parameters)
 					
-					return Base64.decode64(reply["value"])
+					return Base64.decode64(reply)
 				end
 			end
 		end
