@@ -21,13 +21,13 @@ module Async
 			# ```
 			class Safari < Generic
 				# @returns [String] The path to the `safaridriver` executable.
-				def path
-					@options.fetch(:path, "safaridriver")
+				def driver_path
+					@options.fetch(:driver_path, "safaridriver")
 				end
 				
 				# @returns [String] The version of the `safaridriver` executable.
 				def version
-					::IO.popen([self.path, "--version"]) do |io|
+					::IO.popen([self.driver_path, "--version"]) do |io|
 						return io.read
 					end
 				rescue Errno::ENOENT
@@ -46,7 +46,7 @@ module Async
 					# @returns [Array(String)] The arguments to pass to the `safaridriver` executable.
 					def arguments(**options)
 						[
-							options.fetch(:path, "safaridriver"),
+							options.fetch(:driver_path, "safaridriver"),
 							"--port=#{self.port}",
 						].compact
 					end
@@ -71,7 +71,7 @@ module Async
 				
 				# Start the driver.
 				def start(**options)
-					Driver.new(**options).tap(&:start)
+					Driver.new(**@options, **options).tap(&:start)
 				end
 				
 				# The default capabilities for the Safari browser which need to be provided when requesting a new session.

@@ -20,13 +20,13 @@ module Async
 			# end
 			class Firefox < Generic
 				# @returns [String] The path to the `geckodriver` executable.
-				def path
-					@options.fetch(:path, "geckodriver")
+				def driver_path
+					@options.fetch(:driver_path, "geckodriver")
 				end
 				
 				# @returns [String] The version of the `geckodriver` executable.
 				def version
-					::IO.popen([self.path, "--version"]) do |io|
+					::IO.popen([self.driver_path, "--version"]) do |io|
 						return io.read
 					end
 				rescue Errno::ENOENT
@@ -47,10 +47,10 @@ module Async
 						1
 					end
 					
-					# @returns [Array(String)] The arguments to pass to the `chromedriver` executable.
+					# @returns [Array(String)] The arguments to pass to the `geckodriver` executable.
 					def arguments(**options)
 						[
-							options.fetch(:path, "geckodriver"),
+							options.fetch(:driver_path, "geckodriver"),
 							"--port", self.port.to_s,
 						].compact
 					end
@@ -75,7 +75,7 @@ module Async
 				
 				# Start the driver.
 				def start(**options)
-					Driver.new(**options).tap(&:start)
+					Driver.new(**@options, **options).tap(&:start)
 				end
 				
 				# The default capabilities for the Firefox browser which need to be provided when requesting a new session.
