@@ -1,66 +1,71 @@
 # Comparison: Async::WebDriver vs Selenium
 
-Both suites run **identical tests** against the same simple multi-page HTML application:
+This example runs the **same 16 tests** against a simple multi-page HTML application
+using two different stacks:
 
-- 4 describe groups (home, about, contact, navigation)
-- 4 tests each = **16 tests total**
-- Same browser operations: navigate, find elements, click links, fill forms
+| | `sus/` | `rspec/` |
+|---|---|---|
+| Test framework | [Sus](https://github.com/socketry/sus) | [RSpec](https://rspec.info) |
+| WebDriver client | **Async::WebDriver** | [Selenium](https://selenium.dev) |
+| HTTP app server | Async::HTTP (non-blocking) | WEBrick (blocking) |
+| Browser | Chrome for Testing | Chrome for Testing |
+| Session per group | Pool checkout (reused) | Fresh ChromeDriver session |
 
-## Requirements
-
-Install Chrome for Testing via the built-in installer:
-
-``` ruby
-require "async/webdriver/installer"
-Async::WebDriver::Installer::Chrome.install(:stable)
-```
-
-Or use `Async::WebDriver::Bridge::Chrome.for(:stable)` directly — it installs on first use.
+The application has four pages — home, about, contact, and navigation — with 4 tests
+each covering titles, headings, links, form submission, and browser history.
 
 ## Setup
 
-```sh
-# Sus / Async::WebDriver
-cd sus && bundle install
+Chrome for Testing is installed automatically on first use via the built-in installer.
+No separate download step is needed.
 
-# RSpec / Selenium
+```sh
+cd sus   && bundle install
 cd rspec && bundle install
 ```
 
 ## Running
 
 ```sh
-# Selenium — sequential (one ChromeDriver session per describe block)
-cd rspec
-time bundle exec rspec
-
-# Async::WebDriver — sequential (pool keeps Chrome alive, sessions reused)
+# Async::WebDriver — sequential
 cd sus
 time bundle exec sus test/suite.rb
 
-# Async::WebDriver — concurrent (all describe blocks run in parallel)
+# Async::WebDriver — parallel (sus-parallel forks separate processes)
 cd sus
 time bundle exec sus-parallel test/suite.rb
+
+# Selenium — sequential
+cd rspec
+time bundle exec rspec
 ```
 
 ## Results
 
+Measured on macOS (Apple Silicon), Chrome for Testing 148, 16 tests:
+
 ```
-Selenium / RSpec    sequential   4.31s
-Async::WebDriver    sequential   2.05s   (~2× faster)
-Async::WebDriver    sus-parallel 4.07s   (slower — separate processes, each starts Chrome)
+Async::WebDriver   sus            2.05s   ✅ fastest
+Selenium           rspec          4.31s   ~2× slower
+Async::WebDriver   sus-parallel   4.07s   slower than sequential (see below)
 ```
 
 ## Why async-webdriver is faster sequentially
 
-The pool keeps a **single Chrome process alive** for the entire run and reuses the
-same session across all 16 tests. Selenium creates and tears down a fresh ChromeDriver
-session for each of the 4 describe groups, paying startup overhead four times.
+The `POOL` constant in `sus/test/suite.rb` keeps a **single Chrome process alive**
+for the entire run, checking sessions in and out as tests need them. Every test reuses
+the same browser — no per-group startup or teardown cost.
 
-## Why sus-parallel is slower here
+Selenium (in the RSpec suite) creates and destroys a fresh ChromeDriver session for
+each of the four `describe` blocks. That's four full browser-session round-trips paid
+as overhead, in addition to the actual test work.
 
-`sus-parallel` forks separate OS processes. Each process gets its own copy of the
-pool constant and starts its own Chrome — negating the reuse benefit. The concurrency
-advantage of async-webdriver shows inside a **single process** using `Async`, where
-many concurrent fibers share one pool. For this kind of in-process concurrency,
-look at `async-webdriver` with `Async::Barrier` rather than `sus-parallel`.
+## Why `sus-parallel` is slower here
+
+`sus-parallel` forks separate **OS processes**. Each fork gets its own copy of the
+`POOL` constant and starts its own Chrome instance, paying four startup costs instead
+of one — the opposite of what we want.
+
+The in-process concurrency of Async::WebDriver is best demonstrated with
+`Async::Barrier`, where many fibers share one pool inside a single process. See
+[`benchmark/test-pool.rb`](../../benchmark/test-pool.rb) for an example.
