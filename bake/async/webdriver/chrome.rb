@@ -17,10 +17,10 @@ def install(version: "stable")
 	installation = Async::WebDriver::Installer::Chrome.install(version)
 	
 	Console.info(self, "Chrome for Testing is ready.",
-		version:      installation.version,
-		platform:     installation.platform,
+		version: installation.version,
+		platform: installation.platform,
 		browser_path: installation.browser_path,
-		driver_path:  installation.driver_path,
+		driver_path: installation.driver_path,
 	)
 	
 	return installation
