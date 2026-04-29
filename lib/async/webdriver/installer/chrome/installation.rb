@@ -30,28 +30,27 @@ module Async
 						platform = Platform.current
 						release = Releases.resolve(version, platform)
 						
-						existing = find(release[:version], platform, state: state)
-						return existing if existing
-						
-						Console.info(self, "Installing Chrome for Testing #{release[:version]}...", platform: platform)
-						
-						dir = installation_dir(release[:version], platform, state: state)
-						FileUtils.mkdir_p(dir)
-						
-						begin
-							download_and_extract(release[:chrome_url], File.join(dir, "chrome"))
-							download_and_extract(release[:chromedriver_url], File.join(dir, "chromedriver"))
+						unless installation = find(release[:version], platform, state: state)
+							Console.info(self, "Installing Chrome for Testing #{release[:version]}...", platform: platform)
 							
-							installation = find(release[:version], platform, state: state) or
-								raise "Installation failed: binaries not found after extraction"
+							dir = installation_dir(release[:version], platform, state: state)
+							FileUtils.mkdir_p(dir)
 							
-							Console.info(self, "Installed Chrome for Testing #{release[:version]}.", platform: platform)
-							
-							installation
-						rescue
-							FileUtils.rm_rf(dir)
-							raise
+							begin
+								download_and_extract(release[:chrome_url], File.join(dir, "chrome"))
+								download_and_extract(release[:chromedriver_url], File.join(dir, "chromedriver"))
+								
+								installation = find(release[:version], platform, state: state) or
+									raise "Installation failed: binaries not found after extraction"
+								
+								Console.info(self, "Installed Chrome for Testing #{release[:version]}.", platform: platform)
+							rescue
+								FileUtils.rm_rf(dir)
+								raise
+							end
 						end
+						
+						return installation
 					end
 					
 					# Find an already-installed version, without hitting the network.
