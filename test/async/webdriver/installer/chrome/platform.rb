@@ -21,7 +21,7 @@ describe Async::WebDriver::Installer::Chrome::Platform do
 		end
 		
 		it "raises for an unknown platform" do
-			expect { subject.chrome_binary("bogus") }.to raise_exception(RuntimeError)
+			expect{subject.chrome_binary("bogus")}.to raise_exception(RuntimeError)
 		end
 	end
 	
@@ -31,7 +31,7 @@ describe Async::WebDriver::Installer::Chrome::Platform do
 		end
 		
 		it "raises for an unknown platform" do
-			expect { subject.chromedriver_binary("bogus") }.to raise_exception(RuntimeError)
+			expect{subject.chromedriver_binary("bogus")}.to raise_exception(RuntimeError)
 		end
 	end
 end

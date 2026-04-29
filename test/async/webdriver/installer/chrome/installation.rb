@@ -7,8 +7,8 @@ require "async/webdriver/installer/chrome/installation"
 require "tmpdir"
 
 describe Async::WebDriver::Installer::Chrome::Installation do
-	let(:platform) { Async::WebDriver::Installer::Chrome::Platform.current }
-	let(:state) { Dir.mktmpdir("async-webdriver-test-") }
+	let(:platform) {Async::WebDriver::Installer::Chrome::Platform.current}
+	let(:state) {Dir.mktmpdir("async-webdriver-test-")}
 	
 	def after(error = nil)
 		FileUtils.rm_rf(state)

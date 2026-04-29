@@ -7,7 +7,7 @@ require "async/webdriver/installer/chrome/releases"
 require "async/webdriver/installer/chrome/platform"
 
 describe Async::WebDriver::Installer::Chrome::Releases do
-	let(:platform) { Async::WebDriver::Installer::Chrome::Platform.current }
+	let(:platform) {Async::WebDriver::Installer::Chrome::Platform.current}
 	
 	with ".resolve" do
 		it "resolves :stable to a version hash" do
@@ -27,7 +27,7 @@ describe Async::WebDriver::Installer::Chrome::Releases do
 		end
 		
 		it "raises for an unknown channel" do
-			expect { subject.resolve(:nightly, platform) }.to raise_exception(ArgumentError)
+			expect{subject.resolve(:nightly, platform)}.to raise_exception(ArgumentError)
 		end
 	end
 end

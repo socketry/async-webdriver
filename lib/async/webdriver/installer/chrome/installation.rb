@@ -15,9 +15,9 @@ module Async
 				# Represents a Chrome for Testing installation on disk, and provides class-level
 				# methods for resolving, locating, and downloading installations.
 				#
-				# Installations are stored under the state directory, organised as:
+				# Installations are stored under the cache_path directory, organised as:
 				#
-				# 	{state}/{platform}/{version}/
+				# 	{cache_path}/{platform}/{version}/
 				# 	  chrome/       ← extracted chrome zip contents
 				# 	  chromedriver/ ← extracted chromedriver zip contents
 				#
@@ -34,23 +34,23 @@ module Async
 					# the local cache only.
 					#
 					# @parameter version [Symbol | String] Channel or version specifier.
-					# @parameter state [String] Root of the state directory.
+					# @parameter cache_path [String] Root of the cache_path directory.
 					# @returns [Installation]
-					def self.install(version, state:)
+					def self.install(version, cache_path:)
 						platform = Platform.current
 						release = Releases.resolve(version, platform)
 						
-						unless installation = find(release[:version], platform, state: state)
+						unless installation = find(release[:version], platform, cache_path: cache_path)
 							Console.info(self, "Installing Chrome for Testing #{release[:version]}...", platform: platform)
 							
-							dir = installation_dir(release[:version], platform, state: state)
+							dir = installation_dir(release[:version], platform, cache_path: cache_path)
 							FileUtils.mkdir_p(dir)
 							
 							begin
 								download_and_extract(release[:chrome_url], File.join(dir, "chrome"))
 								download_and_extract(release[:chromedriver_url], File.join(dir, "chromedriver"))
 								
-								installation = find(release[:version], platform, state: state) or
+								installation = find(release[:version], platform, cache_path: cache_path) or
 									raise "Installation failed: binaries not found after extraction"
 								
 								Console.info(self, "Installed Chrome for Testing #{release[:version]}.", platform: platform)
@@ -63,7 +63,7 @@ module Async
 						# Update the channel symlink so subsequent find(:stable) calls
 						# resolve locally without a network request.
 						if channel = channel_name(version)
-							update_channel_symlink(channel, release[:version], platform, state: state)
+							update_channel_symlink(channel, release[:version], platform, cache_path: cache_path)
 						end
 						
 						return installation
@@ -76,13 +76,13 @@ module Async
 					#
 					# @parameter version [Symbol | String] Channel or exact version string.
 					# @parameter platform [String] Platform string, e.g. `"mac-arm64"`.
-					# @parameter state [String] Root of the state directory.
+					# @parameter cache_path [String] Root of the cache_path directory.
 					# @returns [Installation | Nil]
-					def self.find(version, platform, state:)
+					def self.find(version, platform, cache_path:)
 						if channel = channel_name(version)
-							find_channel(channel, platform, state: state)
+							find_channel(channel, platform, cache_path: cache_path)
 						else
-							find_version(version, platform, state: state)
+							find_version(version, platform, cache_path: cache_path)
 						end
 					end
 					
@@ -113,17 +113,17 @@ module Async
 						Releases::CHANNELS.key(version.to_s.capitalize) && version.to_s.downcase
 					end
 					
-					private_class_method def self.find_channel(channel, platform, state:)
-						symlink = channel_symlink(channel, platform, state: state)
+					private_class_method def self.find_channel(channel, platform, cache_path:)
+						symlink = channel_symlink(channel, platform, cache_path: cache_path)
 						return nil unless File.symlink?(symlink)
 						
 						# Derive the version from the symlink target name.
 						version = File.basename(File.readlink(symlink))
-						find_version(version, platform, state: state)
+						find_version(version, platform, cache_path: cache_path)
 					end
 					
-					private_class_method def self.find_version(version, platform, state:)
-						dir = installation_dir(version, platform, state: state)
+					private_class_method def self.find_version(version, platform, cache_path:)
+						dir = installation_dir(version, platform, cache_path: cache_path)
 						
 						browser_path = File.join(dir, "chrome", Platform.chrome_binary(platform))
 						driver_path = File.join(dir, "chromedriver", Platform.chromedriver_binary(platform))
@@ -138,9 +138,9 @@ module Async
 						)
 					end
 					
-					private_class_method def self.update_channel_symlink(channel, version, platform, state:)
-						symlink = channel_symlink(channel, platform, state: state)
-						target = installation_dir(version, platform, state: state)
+					private_class_method def self.update_channel_symlink(channel, version, platform, cache_path:)
+						symlink = channel_symlink(channel, platform, cache_path: cache_path)
+						target = installation_dir(version, platform, cache_path: cache_path)
 						
 						# Remove stale symlink if it points elsewhere.
 						if File.symlink?(symlink) && File.readlink(symlink) != target
@@ -150,12 +150,12 @@ module Async
 						File.symlink(target, symlink) unless File.symlink?(symlink)
 					end
 					
-					private_class_method def self.channel_symlink(channel, platform, state:)
-						File.join(state, platform, channel.to_s)
+					private_class_method def self.channel_symlink(channel, platform, cache_path:)
+						File.join(cache_path, platform, channel.to_s)
 					end
 					
-					private_class_method def self.installation_dir(version, platform, state:)
-						File.join(state, platform, version)
+					private_class_method def self.installation_dir(version, platform, cache_path:)
+						File.join(cache_path, platform, version)
 					end
 					
 					private_class_method def self.download_and_extract(url, dest)
