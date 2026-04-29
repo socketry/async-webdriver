@@ -34,7 +34,7 @@ module Async
 					# the local cache only.
 					#
 					# @parameter version [Symbol | String] Channel or version specifier.
-					# @parameter cache_path [String] Root of the cache_path directory.
+					# @parameter cache_path [String] Root of the cache directory.
 					# @returns [Installation]
 					def self.install(version, cache_path:)
 						platform = Platform.current
@@ -76,7 +76,7 @@ module Async
 					#
 					# @parameter version [Symbol | String] Channel or exact version string.
 					# @parameter platform [String] Platform string, e.g. `"mac-arm64"`.
-					# @parameter cache_path [String] Root of the cache_path directory.
+					# @parameter cache_path [String] Root of the cache directory.
 					# @returns [Installation | Nil]
 					def self.find(version, platform, cache_path:)
 						if channel = channel_name(version)

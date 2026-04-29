@@ -6,7 +6,7 @@
 # Install Chrome for Testing and its matching ChromeDriver.
 #
 # Downloads the requested version from the Chrome for Testing infrastructure
-# and caches it in `~/.local/state/async-webdriver/` (XDG `$XDG_STATE_HOME`).
+# and caches it in `~/.cache/async-webdriver.rb/` (XDG `$XDG_CACHE_HOME`).
 # Subsequent calls with the same version are a no-op.
 #
 # @parameter version [String] The version to install: a channel (`stable`, `beta`, `dev`, `canary`),

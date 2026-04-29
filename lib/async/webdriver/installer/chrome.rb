@@ -46,19 +46,19 @@ module Async
 				# infrastructure only when the version is not already present.
 				#
 				# @parameter version [Symbol | String] Version specifier.
-				# @parameter cache [String] Root of the cache directory.
+				# @parameter cache_path [String] Root of the cache directory.
 				# @returns [Installation]
-				def self.install(version = :stable, cache: Installer.cache_path("chrome"))
-					Installation.install(version, cache: cache)
+				def self.install(version = :stable, cache_path: Installer.cache_path("chrome"))
+					Installation.install(version, cache_path: cache_path)
 				end
 				
 				# Find an already-installed version or channel without hitting the network.
 				#
 				# @parameter version [Symbol | String] Channel or exact version string.
-				# @parameter cache [String] Root of the cache directory.
+				# @parameter cache_path [String] Root of the cache directory.
 				# @returns [Installation | Nil]
-				def self.find(version, cache: Installer.cache_path("chrome"))
-					Installation.find(version, Platform.current, cache: cache)
+				def self.find(version, cache_path: Installer.cache_path("chrome"))
+					Installation.find(version, Platform.current, cache_path: cache_path)
 				end
 			end
 		end
