@@ -82,12 +82,7 @@ module Async
 						alwaysMatch: {
 							browserName: "chrome",
 							"goog:chromeOptions": {
-								args: [
-								headless ? "--headless=new" : nil,
-								headless ? "--no-sandbox" : nil,
-								headless ? "--disable-gpu" : nil,
-								headless ? "--disable-dev-shm-usage" : nil,
-							].compact,
+								args: [headless ? "--headless=new" : nil].compact,
 							},
 							webSocketUrl: true,
 						},
