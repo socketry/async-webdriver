@@ -1,6 +1,6 @@
 # Releases
 
-## Unreleased
+## v0.12.2
 
   - **Fixed** `Installer.cache_path` usage.
 
