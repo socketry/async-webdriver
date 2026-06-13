@@ -7,6 +7,8 @@ require_relative "chrome/platform"
 require_relative "chrome/releases"
 require_relative "chrome/installation"
 
+require_relative "cache_path"
+
 module Async
 	module WebDriver
 		module Installer

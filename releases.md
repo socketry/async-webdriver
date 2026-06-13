@@ -1,5 +1,9 @@
 # Releases
 
+## Unreleased
+
+  - **Fixed** `Installer.cache_path` usage.
+
 ## v0.12.0
 
   - Add `Async::WebDriver::Installer::Chrome` for automatic Chrome for Testing installation and management. `Installer::Chrome.install(version)` resolves the version via the Chrome for Testing JSON API, caches binaries in `~/.local/state/async-webdriver/` (XDG `$XDG_STATE_HOME`), and returns an `Installation` with paths to both the Chrome and ChromeDriver binaries.
